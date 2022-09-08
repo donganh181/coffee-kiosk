@@ -21,6 +21,7 @@ namespace coffee_kiosk_solution.Data.Context
         public virtual DbSet<TblAccount> TblAccounts { get; set; }
         public virtual DbSet<TblArea> TblAreas { get; set; }
         public virtual DbSet<TblCampaign> TblCampaigns { get; set; }
+        public virtual DbSet<TblCategory> TblCategories { get; set; }
         public virtual DbSet<TblDiscount> TblDiscounts { get; set; }
         public virtual DbSet<TblOrder> TblOrders { get; set; }
         public virtual DbSet<TblOrderDetail> TblOrderDetails { get; set; }
@@ -94,6 +95,20 @@ namespace coffee_kiosk_solution.Data.Context
                     .HasConstraintName("FK_tblCampaign_tblArea");
             });
 
+            modelBuilder.Entity<TblCategory>(entity =>
+            {
+                entity.ToTable("tblCategory");
+
+                entity.HasIndex(e => e.Name, "IX_tblCategory")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255);
+            });
+
             modelBuilder.Entity<TblDiscount>(entity =>
             {
                 entity.ToTable("tblDiscount");
@@ -159,6 +174,12 @@ namespace coffee_kiosk_solution.Data.Context
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.HasOne(d => d.Category)
+                    .WithMany(p => p.TblProducts)
+                    .HasForeignKey(d => d.CategoryId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tblProduct_tblCategory");
             });
 
             modelBuilder.Entity<TblProductImage>(entity =>

@@ -18,7 +18,9 @@ namespace coffee_kiosk_solution.Data.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int Status { get; set; }
+        public Guid CategoryId { get; set; }
 
+        public virtual TblCategory Category { get; set; }
         public virtual ICollection<TblDiscount> TblDiscounts { get; set; }
         public virtual ICollection<TblOrderDetail> TblOrderDetails { get; set; }
         public virtual ICollection<TblProductImage> TblProductImages { get; set; }
