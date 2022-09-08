@@ -1,0 +1,12 @@
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\bin\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.deps.json
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\bin\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.runtimeconfig.json
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\bin\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.runtimeconfig.dev.json
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\bin\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.dll
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\bin\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.pdb
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\obj\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.csprojAssemblyReference.cache
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\obj\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.AssemblyInfoInputs.cache
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\obj\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.AssemblyInfo.cs
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\obj\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.csproj.CoreCompileInputs.cache
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\obj\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.dll
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\obj\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.pdb
+D:\SWP\coffee-kiosk-solution\coffee-kiosk-solution.Data\obj\Debug\netcoreapp3.1\coffee-kiosk-solution.Data.genruntimeconfig.cache
