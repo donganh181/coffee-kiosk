@@ -31,6 +31,7 @@ namespace coffee_kiosk_solution.Data.Context
         public virtual DbSet<TblShop> TblShops { get; set; }
         public virtual DbSet<TblSupply> TblSupplies { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -52,6 +53,11 @@ namespace coffee_kiosk_solution.Data.Context
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.InverseCreator)
+                    .HasForeignKey(d => d.CreatorId)
+                    .HasConstraintName("FK_tblAccount_tblAccount");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.TblAccounts)
