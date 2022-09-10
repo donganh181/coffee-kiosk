@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using coffee_kiosk_solution.Data.AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace coffee_kiosk_solution.App_Start
             var mappingConfig = new MapperConfiguration(mc =>
             {
 
+                mc.ConfigAccountModule();
             });
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

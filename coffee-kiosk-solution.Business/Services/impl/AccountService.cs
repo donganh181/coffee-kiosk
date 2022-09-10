@@ -44,7 +44,12 @@ namespace coffee_kiosk_solution.Business.Services.impl
             {
                 await _unitOfWork.AccountRepository.InsertAsync(account);
                 await _unitOfWork.SaveAsync();
-                var result = _mapper.Map<AccountViewModel>(account);
+                var result = await _unitOfWork.AccountRepository
+                .Get(u => u.Username.Equals(model.Username))
+                .Include(a => a.Role)
+                .Include(b => b.Creator)
+                .ProjectTo<AccountViewModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
                 return result;
             }
             catch (Exception e)
