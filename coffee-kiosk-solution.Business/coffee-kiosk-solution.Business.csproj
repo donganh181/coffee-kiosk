@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\coffee-kiosk-solution.Data\coffee-kiosk-solution.Data.csproj" />
   </ItemGroup>
 

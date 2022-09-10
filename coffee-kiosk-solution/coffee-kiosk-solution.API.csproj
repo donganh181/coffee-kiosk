@@ -21,8 +21,4 @@
     <ProjectReference Include="..\coffee-kiosk-solution.Data\coffee-kiosk-solution.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
