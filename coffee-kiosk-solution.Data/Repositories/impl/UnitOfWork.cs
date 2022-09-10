@@ -12,7 +12,7 @@ namespace coffee_kiosk_solution.Data.Repositories.impl
 
         public IAccountRepository AccountRepository { get; set; }
 
-        public UnitOfWork(Coffee_KioskContext context, AccountRepository accountRepository)
+        public UnitOfWork(Coffee_KioskContext context, IAccountRepository accountRepository)
         {
             _context = context;
             AccountRepository = accountRepository;

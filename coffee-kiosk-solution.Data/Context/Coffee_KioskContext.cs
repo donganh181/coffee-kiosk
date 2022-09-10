@@ -31,7 +31,6 @@ namespace coffee_kiosk_solution.Data.Context
         public virtual DbSet<TblShop> TblShops { get; set; }
         public virtual DbSet<TblSupply> TblSupplies { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");

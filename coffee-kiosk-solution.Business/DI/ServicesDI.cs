@@ -1,4 +1,6 @@
-﻿using coffee_kiosk_solution.Data.Context;
+﻿using coffee_kiosk_solution.Business.Services;
+using coffee_kiosk_solution.Business.Services.impl;
+using coffee_kiosk_solution.Data.Context;
 using coffee_kiosk_solution.Data.Repositories;
 using coffee_kiosk_solution.Data.Repositories.impl;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +16,10 @@ namespace coffee_kiosk_solution.Business.DI
         public static void ConfigServicesDI(this IServiceCollection services)
         {
             services.AddScoped<DbContext, Coffee_KioskContext>();
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAccountService, AccountService>();
         }
     }
 }
