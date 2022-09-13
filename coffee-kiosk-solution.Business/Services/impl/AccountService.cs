@@ -25,7 +25,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IAccountService> _logger;
 
-        public AccountService(IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork, ILogger<IAccountService> logger)
+        public AccountService(IMapper mapper, IConfiguration configuration,
+            IUnitOfWork unitOfWork, ILogger<IAccountService> logger)
         {
             _mapper = mapper;
             _configuration = configuration;
