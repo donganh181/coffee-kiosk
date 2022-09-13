@@ -8,6 +8,8 @@ namespace coffee_kiosk_solution.Data.Repositories
     public interface IUnitOfWork
     {
         IAccountRepository AccountRepository { get; }
+
+        ICategoryRepository CategoryRepository { get; }
         void Save();
         Task SaveAsync();
     }

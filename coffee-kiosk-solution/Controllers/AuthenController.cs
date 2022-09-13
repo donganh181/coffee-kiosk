@@ -24,6 +24,11 @@ namespace coffee_kiosk_solution.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// This feature allow unauthenticated user to login to system
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         [MapToApiVersion("1")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel request)

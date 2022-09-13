@@ -29,6 +29,11 @@ namespace coffee_kiosk_solution.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// This feature allow admin to Create new account to staff
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [MapToApiVersion("1")]

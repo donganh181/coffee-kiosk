@@ -12,10 +12,13 @@ namespace coffee_kiosk_solution.Data.Repositories.impl
 
         public IAccountRepository AccountRepository { get; set; }
 
-        public UnitOfWork(Coffee_KioskContext context, IAccountRepository accountRepository)
+        public ICategoryRepository CategoryRepository { get; set; }
+
+        public UnitOfWork(Coffee_KioskContext context, IAccountRepository accountRepository, ICategoryRepository categoryRepository)
         {
             _context = context;
             AccountRepository = accountRepository;
+            CategoryRepository = categoryRepository;
         }
 
         public void Save()
