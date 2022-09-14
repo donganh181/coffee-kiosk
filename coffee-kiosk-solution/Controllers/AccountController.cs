@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace coffee_kiosk_solution.Controllers
 {
-    [Route("api/v{version:apiVersion}/account")]
+    [Route("api/v{version:apiVersion}/accounts")]
     [ApiController]
     [ApiVersion("1")]
     public class AccountController : Controller

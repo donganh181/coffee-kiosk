@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace coffee_kiosk_solution.Controllers
 {
-    [Route("api/v{version:apiVersion}/category")]
+    [Route("api/v{version:apiVersion}/categories")]
     [ApiController]
     [ApiVersion("1")]
     public class CategoryController : Controller
@@ -45,7 +45,7 @@ namespace coffee_kiosk_solution.Controllers
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _categoryService.Create(model);
-            _logger.LogInformation($"Created category {result.Name} by admin with id: {token.Id}");
+            _logger.LogInformation($"Create category {result.Name} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<CategoryViewModel>((int)HttpStatusCode.OK, "Create success.", result));
         }
 
@@ -96,7 +96,7 @@ namespace coffee_kiosk_solution.Controllers
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _categoryService.Delete(id);
-            _logger.LogInformation($"Change Status category {result.Id} by admin with id: {token.Id}");
+            _logger.LogInformation($"Delete category {result.Id} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<CategoryViewModel>((int)HttpStatusCode.OK, "Delete success.", result));
         }
 
@@ -107,7 +107,7 @@ namespace coffee_kiosk_solution.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetCategoryById(Guid id)
         {
             var result = await _categoryService.GetById(id);
             _logger.LogInformation($"Get category {result.Id}");
@@ -115,7 +115,7 @@ namespace coffee_kiosk_solution.Controllers
         }
 
         /// <summary>
-        /// This feature allow user to get table of category
+        /// This feature allow user to get all categories with paging (default value of status is 0)
         /// </summary>
         /// <param name="model"></param>
         /// <param name="size"></param>
@@ -123,10 +123,10 @@ namespace coffee_kiosk_solution.Controllers
         /// <returns></returns>
         [HttpGet]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> Get([FromQuery] CategorySearchViewModel model, int size, int pageNum = CommonConstants.DefaultPage)
+        public async Task<IActionResult> GetAllCategoriesWithPaging([FromQuery] CategorySearchViewModel model, int size, int pageNum = CommonConstants.DefaultPage)
         {
             var result = await _categoryService.GetAllWithPaging(model,size,pageNum);
-            _logger.LogInformation($"Get all category ");
+            _logger.LogInformation($"Get all categories ");
             return Ok(new SuccessResponse<DynamicModelResponse<CategorySearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
         }
     }
