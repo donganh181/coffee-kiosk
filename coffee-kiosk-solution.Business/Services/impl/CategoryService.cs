@@ -68,6 +68,12 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .Get(c => c.Id.Equals(id))
                 .FirstOrDefaultAsync();
 
+            if(cate == null)
+            {
+                _logger.LogError("Can not found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+            }
+
             if(cate.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("This category is deleted.");
@@ -103,6 +109,12 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .Get(c => c.Id.Equals(id))
                 .FirstOrDefaultAsync();
 
+            if (cate == null)
+            {
+                _logger.LogError("Can not found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+            }
+
             if (cate.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("This category is deleted.");
@@ -133,6 +145,12 @@ namespace coffee_kiosk_solution.Business.Services.impl
             var cate = await _unitOfWork.CategoryRepository
                 .Get(c => c.Id.Equals(model.Id))
                 .FirstOrDefaultAsync();
+
+            if (cate == null)
+            {
+                _logger.LogError("Can not found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+            }
 
             if (cate.Status == (int)StatusConstants.Deleted)
             {
@@ -170,6 +188,12 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .Get(c => c.Id.Equals(id))
                 .ProjectTo<CategoryViewModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+
+            if (cate == null)
+            {
+                _logger.LogError("Can not found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+            }
 
             if (cate.Status == (int)StatusConstants.Deleted)
             {

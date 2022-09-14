@@ -10,6 +10,8 @@ namespace coffee_kiosk_solution.Data.Repositories
         IAccountRepository AccountRepository { get; }
 
         ICategoryRepository CategoryRepository { get; }
+
+        IProductRepository ProductRepository { get; }
         void Save();
         Task SaveAsync();
     }

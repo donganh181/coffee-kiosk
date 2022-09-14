@@ -17,6 +17,7 @@ namespace coffee_kiosk_solution.App_Start
 
                 mc.ConfigAccountModule();
                 mc.ConfigCategoryModule();
+                mc.ConfigProductModule();
             });
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

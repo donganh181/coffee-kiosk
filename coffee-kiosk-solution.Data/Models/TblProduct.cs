@@ -20,6 +20,7 @@ namespace coffee_kiosk_solution.Data.Models
         public int Status { get; set; }
         public Guid CategoryId { get; set; }
         public string Description { get; set; }
+        public double Price { get; set; }
 
         public virtual TblCategory Category { get; set; }
         public virtual ICollection<TblDiscount> TblDiscounts { get; set; }
