@@ -18,6 +18,8 @@ namespace coffee_kiosk_solution.Business.DI
             services.AddScoped<DbContext, Coffee_KioskContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddScoped<IFileService, FirebaseStorageService>();
+
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountService, AccountService>();
 
@@ -26,6 +28,9 @@ namespace coffee_kiosk_solution.Business.DI
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
+            services.AddScoped<IProductImageService, ProductImageService>();
         }
     }
 }

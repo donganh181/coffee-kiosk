@@ -24,14 +24,17 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IProductService> _logger;
+        private readonly IProductImageService _productImageService;
 
         public ProductService(IMapper mapper, IConfiguration configuration,
-            IUnitOfWork unitOfWork, ILogger<IProductService> logger)
+            IUnitOfWork unitOfWork, ILogger<IProductService> logger,
+            IProductImageService productImageService)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _productImageService = productImageService;
         }
 
         public async Task<ProductViewModel> ChangeStatus(Guid id)
@@ -59,6 +62,9 @@ namespace coffee_kiosk_solution.Business.Services.impl
             {
                 product.Status = (int)StatusConstants.Activate;
             }
+
+            var listImage = await _productImageService.GetListImageByProductId(id);
+
             try
             {
                 _unitOfWork.ProductRepository.Update(product);
@@ -69,6 +75,9 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     .Include(a => a.Category)
                     .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
+
+                result.ListImage = listImage;
+
                 return result;
             }
             catch (Exception)
@@ -80,6 +89,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         public async Task<ProductViewModel> Create(ProductCreateViewModel model)
         {
+            List<ProductImageViewModel> listImage = new List<ProductImageViewModel>();
             var product = _mapper.Map<TblProduct>(model);
             product.Status = (int)StatusConstants.Activate;
             try
@@ -87,15 +97,29 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 await _unitOfWork.ProductRepository.InsertAsync(product);
                 await _unitOfWork.SaveAsync();
 
+                foreach (var image in model.ListImage)
+                {
+                    ProductImageCreateViewModel imageModel = new ProductImageCreateViewModel()
+                    {
+                        Image = image,
+                        ProductId = product.Id
+                    };
+                    var img = await _productImageService.Create(imageModel);
+                    listImage.Add(img);
+                }
+
                 var result = await _unitOfWork.ProductRepository
                     .Get(p => p.Id.Equals(product.Id))
                     .Include(a => a.Category)
                     .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
+                result.ListImage = listImage;
                 return result;
             }
             catch(Exception e)
             {
+                if(e == null) { 
+                }
                 if (e.InnerException.Message.Contains("Cannot insert duplicate key"))
                 {
                     _logger.LogError("Name is duplicated.");
@@ -127,6 +151,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
             }
             product.Status = (int)StatusConstants.Deleted;
+            product.Name = product.Name + $" - {DateTime.Now} - Deleted";
             try
             {
                 _unitOfWork.ProductRepository.Update(product);
@@ -154,14 +179,20 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search product which is deleted.");
             }
             var listProduct = _unitOfWork.ProductRepository
-                .Get()
+                .Get(p => p.Status != (int)StatusConstants.Deleted)
                 .Include(a => a.Category)
                 .ProjectTo<ProductSearchViewModel>(_mapper.ConfigurationProvider)
-                .ToList()
-                .AsQueryable()
-                .OrderByDescending(l => l.Name);
+                .ToList();
+
+            foreach(var product in listProduct)
+            {
+                var listImage = await _productImageService.GetListImageByProductId(Guid.Parse(product.Id+""));
+                product.ListImage = listImage;
+            }
 
             var listPaging = listProduct
+                .AsQueryable()
+                .OrderByDescending(p => p.Name)
                 .DynamicFilter(model)
                 .PagingIQueryable(pageNum, size, CommonConstants.LimitPaging,
                 CommonConstants.DefaultPaging);
@@ -203,6 +234,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 _logger.LogError("This product is deleted.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
             }
+            var listImage = await _productImageService.GetListImageByProductId(id);
+            product.ListImage = listImage;
             return product;
         }
 
@@ -227,6 +260,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             product.CategoryId = model.CategoryId;
             product.Description = model.Description;
             product.Price = model.Price;
+
             try
             {
                 _unitOfWork.ProductRepository.Update(product);
@@ -237,6 +271,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     .Include(a => a.Category)
                     .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
+                var listImage = await _productImageService.GetListImageByProductId(model.Id);
+                result.ListImage = listImage;
                 return result;
             }
             catch(Exception e)

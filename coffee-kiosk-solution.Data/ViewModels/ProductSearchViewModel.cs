@@ -23,5 +23,7 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public string Description { get; set; }
         [Skip, BindNever]
         public double Price { get; set; }
+        [Skip, BindNever]
+        public List<ProductImageViewModel> ListImage { get; set; }
     }
 }
