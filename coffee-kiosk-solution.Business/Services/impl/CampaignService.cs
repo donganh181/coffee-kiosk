@@ -84,7 +84,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
         public async Task<CampaignViewModel> Create(CampaignCreateViewModle model)
         {
             var campaign = _mapper.Map<TblCampaign>(model);
-            campaign.Status = (int)StatusConstants.Activate;
 
             if (campaign.StartingDate > DateTime.Now)
             {
@@ -101,6 +100,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 _logger.LogError("Invalid Expired Date and Starting Date");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date and Starting Date");
             }
+
+            campaign.Status = (int)StatusConstants.Activate;
 
             try
             {
