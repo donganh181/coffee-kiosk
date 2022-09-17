@@ -16,13 +16,17 @@ namespace coffee_kiosk_solution.Data.Repositories.impl
 
         public IProductRepository ProductRepository { get; set; }
 
+        public IProductImageRepository ProductImageRepository { get; set; }
+
         public UnitOfWork(Coffee_KioskContext context, IAccountRepository accountRepository,
-            ICategoryRepository categoryRepository, IProductRepository productRepository)
+            ICategoryRepository categoryRepository, IProductRepository productRepository,
+            IProductImageRepository productImageRepository)
         {
             _context = context;
             AccountRepository = accountRepository;
             CategoryRepository = categoryRepository;
             ProductRepository = productRepository;
+            ProductImageRepository = productImageRepository;
         }
 
         public void Save()

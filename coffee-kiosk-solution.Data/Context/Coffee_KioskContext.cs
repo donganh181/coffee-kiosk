@@ -194,9 +194,7 @@ namespace coffee_kiosk_solution.Data.Context
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Link)
-                    .IsRequired()
-                    .IsUnicode(false);
+                entity.Property(e => e.Link).IsUnicode(false);
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.TblProductImages)

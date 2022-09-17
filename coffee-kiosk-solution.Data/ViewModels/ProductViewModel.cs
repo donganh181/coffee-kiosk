@@ -14,5 +14,6 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
+        public List<ProductImageViewModel> ListImage { get; set; }
     }
 }
