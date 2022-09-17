@@ -46,6 +46,22 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
             }
 
+            if (campaign.StartingDate > DateTime.Now)
+            {
+                _logger.LogError("Invalid Starting Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Start Date");
+            }
+            if (campaign.ExpiredDate <= DateTime.Now)
+            {
+                _logger.LogError("Invalid Expired Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date");
+            }
+            if (campaign.ExpiredDate <= campaign.StartingDate)
+            {
+                _logger.LogError("Invalid Expired Date and Starting Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date and Starting Date");
+            }
+
             if (campaign.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("This campaign is deleted.");
