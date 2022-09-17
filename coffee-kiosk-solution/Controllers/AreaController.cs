@@ -95,7 +95,7 @@ namespace coffee_kiosk_solution.Controllers
             int size, int pageNum = CommonConstants.DefaultPage)
         {
             var result = await _areaService.GetAllWithPaging(model, size, pageNum);
-            _logger.LogInformation($"Get all products ");
+            _logger.LogInformation($"Get all areas ");
             return Ok(new SuccessResponse<DynamicModelResponse<AreaSearchViewModel>>
                 (
                     (int)HttpStatusCode.OK, "Get success.", result)
@@ -112,7 +112,7 @@ namespace coffee_kiosk_solution.Controllers
         public async Task<IActionResult> GetAreaById(Guid id)
         {
             var result = await _areaService.GetById(id);
-            _logger.LogInformation($"Get product {result.Id}");
+            _logger.LogInformation($"Get area {result.Id}");
             return Ok(new SuccessResponse<AreaViewModel>((int)HttpStatusCode.OK, "Get success.", result));
         }
 
