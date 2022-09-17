@@ -63,9 +63,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 _unitOfWork.DiscountRepository.Update(discount);
                 await _unitOfWork.SaveAsync();
 
-                var result = await _unitOfWork.ProductRepository
+                var result = await _unitOfWork.DiscountRepository
                     .Get(p => p.Id.Equals(id))
-                    .Include(a => a.Category)
                     .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
 
@@ -212,8 +211,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (discount.Status == (int)StatusConstants.Deleted)
             {
-                _logger.LogError("This product is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
+                _logger.LogError("This discount is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This discount is deleted.");
             }
 
             try
