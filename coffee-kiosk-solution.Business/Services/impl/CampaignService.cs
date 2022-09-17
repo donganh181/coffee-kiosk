@@ -85,6 +85,23 @@ namespace coffee_kiosk_solution.Business.Services.impl
         {
             var campaign = _mapper.Map<TblCampaign>(model);
             campaign.Status = (int)StatusConstants.Activate;
+
+            if (campaign.StartingDate > DateTime.Now)
+            {
+                _logger.LogError("Invalid Starting Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Start Date");
+            }
+            if (campaign.ExpiredDate <= DateTime.Now)
+            {
+                _logger.LogError("Invalid Expired Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date");
+            }
+            if (campaign.ExpiredDate <= campaign.StartingDate)
+            {
+                _logger.LogError("Invalid Expired Date and Starting Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date and Starting Date");
+            }
+
             try
             {
                 await _unitOfWork.CampaignRepository.InsertAsync(campaign);
@@ -228,6 +245,22 @@ namespace coffee_kiosk_solution.Business.Services.impl
             {
                 _logger.LogError("This product is deleted.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
+            }
+
+            if (campaign.StartingDate > DateTime.Now)
+            {
+                _logger.LogError("Invalid Starting Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Start Date");
+            }
+            if (campaign.ExpiredDate <= DateTime.Now)
+            {
+                _logger.LogError("Invalid Expired Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date");
+            }
+            if (campaign.ExpiredDate <= campaign.StartingDate)
+            {
+                _logger.LogError("Invalid Expired Date and Starting Date");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date and Starting Date");
             }
 
             campaign.Name = model.Name;
