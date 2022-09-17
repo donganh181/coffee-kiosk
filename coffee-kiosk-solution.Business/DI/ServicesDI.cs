@@ -29,6 +29,12 @@ namespace coffee_kiosk_solution.Business.DI
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
 
+            services.AddScoped<ICampaignRepository, CampaignRepository>();
+            services.AddScoped<ICampaignService, CampaignService>();
+
+            services.AddScoped<IAreaRepository, AreaRepository>();
+            services.AddScoped<IAreaService, AreaService>();
+
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IProductImageService, ProductImageService>();
         }
