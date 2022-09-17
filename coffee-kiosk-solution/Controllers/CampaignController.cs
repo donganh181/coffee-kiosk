@@ -96,7 +96,7 @@ namespace coffee_kiosk_solution.Controllers
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _campaignService.Delete(id);
-            _logger.LogInformation($"Delete area {result.Id} by admin with id: {token.Id}");
+            _logger.LogInformation($"Delete campaign {result.Id} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Delete success.", result));
         }
 

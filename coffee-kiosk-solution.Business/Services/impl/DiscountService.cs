@@ -79,16 +79,16 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         public async Task<DiscountViewModel> Create(DiscountCreateViewModel model)
         {
-            var campaign = _mapper.Map<TblDiscount>(model);
-            campaign.Status = (int)StatusConstants.Activate;
+            var discount = _mapper.Map<TblDiscount>(model);
+            discount.Status = (int)StatusConstants.Activate;
 
             try
             {
-                await _unitOfWork.DiscountRepository.InsertAsync(campaign);
+                await _unitOfWork.DiscountRepository.InsertAsync(discount);
                 await _unitOfWork.SaveAsync();
 
                 var result = await _unitOfWork.DiscountRepository
-                    .Get(p => p.Id.Equals(campaign.Id))
+                    .Get(p => p.Id.Equals(discount.Id))
                     .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
                 return result;
@@ -115,8 +115,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (discount.Status == (int)StatusConstants.Deleted)
             {
-                _logger.LogError("This Discount is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This campaign is deleted.");
+                _logger.LogError("This discount is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This discount is deleted.");
             }
             discount.Status = (int)StatusConstants.Deleted;
 
@@ -144,7 +144,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             if (model.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("Cannot search discount which is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot discount campaign which is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot find discount which is deleted.");
             }
 
             var listDiscount = _unitOfWork.DiscountRepository
@@ -180,22 +180,22 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         public async Task<DiscountViewModel> GetById(Guid id)
         {
-            var campaign = await _unitOfWork.DiscountRepository
+            var discount = await _unitOfWork.DiscountRepository
                 .Get(p => p.Id.Equals(id))
                 .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-            if (campaign == null)
+            if (discount == null)
             {
                 _logger.LogError("Can not found.");
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
             }
 
-            if (campaign.Status == (int)StatusConstants.Deleted)
+            if (discount.Status == (int)StatusConstants.Deleted)
             {
-                _logger.LogError("This campaign is deleted.");
+                _logger.LogError("This discount is deleted.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This discount is deleted.");
             }
-            return campaign;
+            return discount;
         }
 
         public async Task<DiscountViewModel> Update(DiscountUpdateViewModel model)

@@ -60,7 +60,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             if (campaign.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("This campaign is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This campaign is deleted.");
             }
             else if (campaign.Status == (int)StatusConstants.Activate)
             {
@@ -123,10 +123,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
             catch (Exception e)
             {
-                
+
                 _logger.LogError("Invalid data.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
-                
+
             }
         }
 
@@ -244,10 +244,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (campaign.Status == (int)StatusConstants.Deleted)
             {
-                _logger.LogError("This product is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
+                _logger.LogError("This campaign is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This campaign is deleted.");
             }
-            
+
             if (campaign.ExpiredDate <= DateTime.Now)
             {
                 _logger.LogError("Invalid Expired Date");
