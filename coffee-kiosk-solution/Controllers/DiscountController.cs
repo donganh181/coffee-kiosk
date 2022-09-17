@@ -95,7 +95,7 @@ namespace coffee_kiosk_solution.Controllers
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _discountService.Delete(id);
-            _logger.LogInformation($"Delete area {result.Id} by admin with id: {token.Id}");
+            _logger.LogInformation($"Delete discount {result.Id} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Delete success.", result));
         }
 
@@ -112,7 +112,7 @@ namespace coffee_kiosk_solution.Controllers
             int size, int pageNum = CommonConstants.DefaultPage)
         {
             var result = await _discountService.GetAllWithPaging(model, size, pageNum);
-            _logger.LogInformation($"Get all products ");
+            _logger.LogInformation($"Get all discounts ");
             return Ok(new SuccessResponse<DynamicModelResponse<DiscountSearchViewModel>>
                 (
                     (int)HttpStatusCode.OK, "Get success.", result)

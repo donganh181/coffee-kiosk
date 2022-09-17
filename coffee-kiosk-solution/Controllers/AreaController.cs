@@ -39,12 +39,12 @@ namespace coffee_kiosk_solution.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> CreateNewDiscount([FromBody] AreaCreateViewModel model)
+        public async Task<IActionResult> CreateNewArea([FromBody] AreaCreateViewModel model)
         {
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _areaService.Create(model);
-            _logger.LogInformation($"Create Discout {result.AreaName} by admin with id: {token.Id}");
+            _logger.LogInformation($"Create area {result.AreaName} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<AreaViewModel>((int)HttpStatusCode.OK, "Create success.", result));
         }
 
