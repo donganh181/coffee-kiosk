@@ -20,6 +20,7 @@ namespace coffee_kiosk_solution.App_Start
                 mc.ConfigProductModule();
                 mc.ConfigCampaignModule();
                 mc.ConfigAreaModule();
+                mc.ConfigDiscountModule();
                 mc.ConfigProductImageModule();
             });
             IMapper mapper = mappingConfig.CreateMapper();
