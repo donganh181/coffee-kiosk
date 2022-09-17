@@ -70,8 +70,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if(cate == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if(cate.Status == (int)StatusConstants.Deleted)
@@ -111,8 +111,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (cate == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (cate.Status == (int)StatusConstants.Deleted)
@@ -148,8 +148,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (cate == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (cate.Status == (int)StatusConstants.Deleted)
@@ -191,8 +191,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (cate == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (cate.Status == (int)StatusConstants.Deleted)
@@ -224,8 +224,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 CommonConstants.DefaultPaging);
             if (listPaging.Data.ToList().Count < 1)
             {
-                _logger.LogInformation("Can not Found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not Found");
+                _logger.LogError("Cannot Found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
             }
 
             var result = new DynamicModelResponse<CategorySearchViewModel>

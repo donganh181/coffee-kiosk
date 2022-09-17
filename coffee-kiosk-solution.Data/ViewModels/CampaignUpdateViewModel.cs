@@ -16,8 +16,6 @@ namespace coffee_kiosk_solution.Data.ViewModels
         [Required]
         public string Description { get; set; }
         [Required]
-        public int Status { get; set; }
-        [Required]
         public DateTime StartingDate { get; set; }
         [Required]
         public DateTime ExpiredDate { get; set; }

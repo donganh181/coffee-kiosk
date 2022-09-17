@@ -26,9 +26,9 @@ namespace coffee_kiosk_solution.Data.AutoMapper
             mc.CreateMap<TblCampaign, CampaignUpdateViewModel>();
             mc.CreateMap<CampaignUpdateViewModel, TblCampaign>();
 
-            mc.CreateMap<TblCampaign, CampaignSearchViewModule>()
+            mc.CreateMap<TblCampaign, CampaignSearchViewModel>()
                 .ForMember(src => src.AreaName, opt => opt.MapFrom(des => des.Area.AreaName));
-            mc.CreateMap<CampaignSearchViewModule, TblCampaign>();
+            mc.CreateMap<CampaignSearchViewModel, TblCampaign>();
         }
     }
 }

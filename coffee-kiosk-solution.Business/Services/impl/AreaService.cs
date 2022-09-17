@@ -109,7 +109,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
 
 
-        public async Task<DynamicModelResponse<AreaSearchViewModel>> GetallWithPaging(AreaSearchViewModel model, int size, int pageNum)
+        public async Task<DynamicModelResponse<AreaSearchViewModel>> GetAllWithPaging(AreaSearchViewModel model, int size, int pageNum)
         {
             //If Delete func is in use
             /*if (model.Status == (int)StatusConstants.Deleted)
@@ -132,8 +132,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (listPaging.Data.ToList().Count < 1)
             {
-                _logger.LogInformation("Can not Found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not Found");
+                _logger.LogError("Cannot Found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
             }
 
             var result = new DynamicModelResponse<AreaSearchViewModel>
@@ -155,10 +155,11 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .Get(p => p.Id.Equals(id))
                 .ProjectTo<AreaViewModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+
             if (area == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             /*if (area.Status == (int)StatusConstants.Deleted)
@@ -176,8 +177,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .FirstOrDefaultAsync();
             if (area == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             /*if (area.Status == (int)StatusConstants.Deleted)

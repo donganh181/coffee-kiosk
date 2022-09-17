@@ -45,8 +45,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (product == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if(product.Status == (int)StatusConstants.Deleted)
@@ -141,8 +141,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (product == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (product.Status == (int)StatusConstants.Deleted)
@@ -198,8 +198,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 CommonConstants.DefaultPaging);
             if (listPaging.Data.ToList().Count < 1)
             {
-                _logger.LogInformation("Can not Found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not Found");
+                _logger.LogError("Cannot Found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
             }
 
             var result = new DynamicModelResponse<ProductSearchViewModel>
@@ -225,8 +225,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .FirstOrDefaultAsync();
             if (product == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (product.Status == (int)StatusConstants.Deleted)
@@ -247,8 +247,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .FirstOrDefaultAsync();
             if (product == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (product.Status == (int)StatusConstants.Deleted)

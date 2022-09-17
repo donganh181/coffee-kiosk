@@ -109,12 +109,12 @@ namespace coffee_kiosk_solution.Controllers
         /// <returns></returns>
         [HttpGet]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> GetAllCampaignsWithPaging([FromQuery] CampaignSearchViewModule model,
+        public async Task<IActionResult> GetAllCampaignsWithPaging([FromQuery] CampaignSearchViewModel model,
             int size, int pageNum = CommonConstants.DefaultPage)
         {
             var result = await _campaignService.GetAllWithPaging(model, size, pageNum);
             _logger.LogInformation($"Get all products ");
-            return Ok(new SuccessResponse<DynamicModelResponse<CampaignSearchViewModule>>
+            return Ok(new SuccessResponse<DynamicModelResponse<CampaignSearchViewModel>>
                 (
                     (int)HttpStatusCode.OK, "Get success.", result)
                 );

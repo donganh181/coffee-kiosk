@@ -24,22 +24,17 @@ namespace coffee_kiosk_solution.Data.Repositories.impl
 
         public UnitOfWork(Coffee_KioskContext context, IAccountRepository accountRepository,
             ICategoryRepository categoryRepository, IProductRepository productRepository,
-            IProductImageRepository productImageRepository)
+            IProductImageRepository productImageRepository, IAreaRepository areaRepository,
+            ICampaignRepository campaignRepository)
         {
             _context = context;
             AccountRepository = accountRepository;
             CategoryRepository = categoryRepository;
             ProductRepository = productRepository;
             ProductImageRepository = productImageRepository;
-        }
-
-        /*public UnitOfWork(Coffee_KioskContext context, IAreaRepository areaRepository,
-            ICampaignRepository campaignRepository)
-        {
-            _context = context;
             AreaRepository = areaRepository;
             CampaignRepository = campaignRepository;
-        }*/
+        }
 
         public void Save()
         {

@@ -26,9 +26,5 @@ namespace coffee_kiosk_solution.Data.Attributes
         public class SpecificAttribute : System.Attribute
         {
         }
-        [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-        public class DateTimeAttribute : System.Attribute
-        {
-        }
     }
 }

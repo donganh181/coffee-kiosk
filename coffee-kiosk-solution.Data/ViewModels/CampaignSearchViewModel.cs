@@ -8,7 +8,7 @@ using static coffee_kiosk_solution.Data.Attributes.CustomAttributes;
 
 namespace coffee_kiosk_solution.Data.ViewModels
 {
-    public class CampaignSearchViewModule
+    public class CampaignSearchViewModel
     {
         [BindNever]
         public Guid? Id { get; set; }
@@ -17,9 +17,9 @@ namespace coffee_kiosk_solution.Data.ViewModels
         [BindNever]
         public string Description { get; set; }
         public int Status { get; set; }
-        [DateTime]
+        [BindNever, Skip]
         public DateTime StartingDate { get; set; }
-        [DateTime]
+        [BindNever, Skip]
         public DateTime ExpiredDate { get; set; }
         [BindNever]
         public Guid? AreaId { get; set; }

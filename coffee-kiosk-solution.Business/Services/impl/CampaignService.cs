@@ -42,15 +42,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (campaign == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
-            if (campaign.StartingDate > DateTime.Now)
-            {
-                _logger.LogError("Invalid Starting Date");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Start Date");
-            }
             if (campaign.ExpiredDate <= DateTime.Now)
             {
                 _logger.LogError("Invalid Expired Date");
@@ -101,11 +96,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
         {
             var campaign = _mapper.Map<TblCampaign>(model);
 
-            if (campaign.StartingDate > DateTime.Now)
-            {
-                _logger.LogError("Invalid Starting Date");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Start Date");
-            }
             if (campaign.ExpiredDate <= DateTime.Now)
             {
                 _logger.LogError("Invalid Expired Date");
@@ -133,16 +123,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
             catch (Exception e)
             {
-                if (e.InnerException.Message.Contains("Cannot insert duplicate key"))
-                {
-                    _logger.LogError("Name is duplicated.");
-                    throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Name is duplicated.");
-                }
-                else
-                {
-                    _logger.LogError("Invalid data.");
-                    throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
-                }
+                
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
+                
             }
         }
 
@@ -154,8 +138,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (campaign == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (campaign.Status == (int)StatusConstants.Deleted)
@@ -164,7 +148,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This campaign is deleted.");
             }
             campaign.Status = (int)StatusConstants.Deleted;
-
+            campaign.Name = campaign.Name + $"-{DateTime.Now}-Deleted";
             try
             {
                 _unitOfWork.CampaignRepository.Update(campaign);
@@ -185,7 +169,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         }
 
-        public async Task<DynamicModelResponse<CampaignSearchViewModule>> GetAllWithPaging(CampaignSearchViewModule model, int size, int pageNum)
+        public async Task<DynamicModelResponse<CampaignSearchViewModel>> GetAllWithPaging(CampaignSearchViewModel model, int size, int pageNum)
         {
             if (model.Status == (int)StatusConstants.Deleted)
             {
@@ -196,7 +180,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             var listCampaign = _unitOfWork.CampaignRepository
                 .Get()
                 .Include(a => a.Area)
-                .ProjectTo<CampaignSearchViewModule>(_mapper.ConfigurationProvider)
+                .ProjectTo<CampaignSearchViewModel>(_mapper.ConfigurationProvider)
                 .ToList()
                 .AsQueryable()
                 .OrderByDescending(l => l.Name);
@@ -208,11 +192,11 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (listPaging.Data.ToList().Count < 1)
             {
-                _logger.LogInformation("Can not Found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not Found");
+                _logger.LogInformation("Cannot Found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
             }
 
-            var result = new DynamicModelResponse<CampaignSearchViewModule>
+            var result = new DynamicModelResponse<CampaignSearchViewModel>
             {
                 Metadata = new PagingMetaData
                 {
@@ -234,8 +218,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .FirstOrDefaultAsync();
             if (campaign == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (campaign.Status == (int)StatusConstants.Deleted)
@@ -254,8 +238,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .FirstOrDefaultAsync();
             if (campaign == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (campaign.Status == (int)StatusConstants.Deleted)
@@ -263,12 +247,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 _logger.LogError("This product is deleted.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
             }
-
-            if (campaign.StartingDate > DateTime.Now)
-            {
-                _logger.LogError("Invalid Starting Date");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Start Date");
-            }
+            
             if (campaign.ExpiredDate <= DateTime.Now)
             {
                 _logger.LogError("Invalid Expired Date");
@@ -282,10 +261,9 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             campaign.Name = model.Name;
             campaign.Description = model.Description;
-            //campaign.Status = model.Status;
             campaign.StartingDate = model.StartingDate;
             campaign.ExpiredDate = model.ExpiredDate;
-            //campaign.AreaId = model.AreaId;
+            campaign.AreaId = model.AreaId;
 
             try
             {
