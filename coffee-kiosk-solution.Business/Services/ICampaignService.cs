@@ -15,6 +15,6 @@ namespace coffee_kiosk_solution.Business.Services
         Task<CampaignViewModel> ChangeStatus(Guid id);
         Task<CampaignViewModel> Delete(Guid id);
         Task<CampaignViewModel> GetById(Guid id);
-        Task<DynamicModelResponse<CampaignSearchViewModule>> GetAllWithPaging(CampaignSearchViewModule model, int size, int pageNum);
+        Task<DynamicModelResponse<CampaignSearchViewModel>> GetAllWithPaging(CampaignSearchViewModel model, int size, int pageNum);
     }
 }

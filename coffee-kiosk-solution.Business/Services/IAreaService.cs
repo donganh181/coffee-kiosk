@@ -14,6 +14,6 @@ namespace coffee_kiosk_solution.Business.Services
         Task<AreaViewModel> Update(AreaUpdateViewModel model);
         Task<AreaViewModel> Delete(Guid id);
         Task<AreaViewModel> GetById(Guid id);
-        Task<DynamicModelResponse<AreaSearchViewModel>> GetallWithPaging(AreaSearchViewModel model, int size, int pageNum);
+        Task<DynamicModelResponse<AreaSearchViewModel>> GetAllWithPaging(AreaSearchViewModel model, int size, int pageNum);
     }
 }
