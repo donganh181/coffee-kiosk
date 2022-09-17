@@ -173,8 +173,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
         {
             if (model.Status == (int)StatusConstants.Deleted)
             {
-                _logger.LogError("Cannot search product which is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search product which is deleted.");
+                _logger.LogError("Cannot search campaign which is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search campaign which is deleted.");
             }
 
             var listCampaign = _unitOfWork.CampaignRepository

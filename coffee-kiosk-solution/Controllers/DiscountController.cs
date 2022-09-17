@@ -15,93 +15,92 @@ using System.Threading.Tasks;
 
 namespace coffee_kiosk_solution.Controllers
 {
-    [Route("api/v{version:apiVersion}/campaigns")]
+    [Route("api/v{version:apiVersion}/discounts")]
     [ApiController]
     [ApiVersion("1")]
-    public class CampaignController : Controller
+    public class DiscountController : Controller
     {
-        private readonly ICampaignService _campaignService;
-        private readonly ILogger<CampaignController> _logger;
+        private readonly IDiscountService _discountService;
+        private readonly ILogger<DiscountController> _logger;
         private IConfiguration _configuration;
 
-        public CampaignController(ICampaignService campaignService, ILogger<CampaignController> logger,
-            IConfiguration configuration)
+        public DiscountController(IDiscountService discountService, ILogger<DiscountController> logger, IConfiguration configuration)
         {
-            _campaignService = campaignService;
+            _discountService = discountService;
             _logger = logger;
             _configuration = configuration;
         }
 
         /// <summary>
-        /// This feature allow the Admin to create new campaign
+        /// This feature allow the Admin to create new discount
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> CreateNewCampaign([FromBody] CampaignCreateViewModle model)
+        public async Task<IActionResult> CreateNewDiscount([FromBody] DiscountCreateViewModel model)
         {
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
-            var result = await _campaignService.Create(model);
-            _logger.LogInformation($"Create campaign {result.Name} by admin with id: {token.Id}");
-            return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Create success.", result));
+            var result = await _discountService.Create(model);
+            _logger.LogInformation($"Create discount {result.DiscountPercentage} by admin with id: {token.Id}");
+            return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Create success.", result));
         }
 
         /// <summary>
-        /// This feature allow the Admin to update campaign
+        /// This feature allow the Admin to update discount
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPut]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> UpdateCampaign([FromBody] CampaignUpdateViewModel model)
+        public async Task<IActionResult> UpdateDiscount([FromBody] DiscountUpdateViewModel model)
         {
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
-            var result = await _campaignService.Update(model);
+            var result = await _discountService.Update(model);
             _logger.LogInformation($"Update campaign {result.Id} by admin with id: {token.Id}");
-            return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Update success.", result));
+            return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Update success.", result));
         }
 
         /// <summary>
-        /// This feature allow admin to change status of campaign
+        /// This feature allow admin to change status of discount
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPatch]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> ChangeStatusCampaign([FromBody] Guid id)
+        public async Task<IActionResult> ChangeStatusDiscount([FromBody] Guid id)
         {
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
-            var result = await _campaignService.ChangeStatus(id);
+            var result = await _discountService.ChangeStatus(id);
             _logger.LogInformation($"Change Status campaign {result.Id} by admin with id: {token.Id}");
-            return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Update success.", result));
+            return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Update success.", result));
         }
 
         /// <summary>
-        /// This feature allow admin to delete campaign
+        /// This feature allow admin to delete discount
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> DeleteCampaign([FromBody] Guid id)
+        public async Task<IActionResult> DeleteDiscount([FromBody] Guid id)
         {
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
-            var result = await _campaignService.Delete(id);
+            var result = await _discountService.Delete(id);
             _logger.LogInformation($"Delete area {result.Id} by admin with id: {token.Id}");
-            return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Delete success.", result));
+            return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Delete success.", result));
         }
 
         /// <summary>
-        /// This feature allow user to get all campaign with paging (default value of status is 0)
+        /// This feature allow user to get all discounts with paging (default value of status is 0)
         /// </summary>
         /// <param name="model"></param>
         /// <param name="size"></param>
@@ -109,19 +108,19 @@ namespace coffee_kiosk_solution.Controllers
         /// <returns></returns>
         [HttpGet]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> GetAllCampaignsWithPaging([FromQuery] CampaignSearchViewModel model,
+        public async Task<IActionResult> GetAllDiscountsWithPaging([FromQuery] DiscountSearchViewModel model,
             int size, int pageNum = CommonConstants.DefaultPage)
         {
-            var result = await _campaignService.GetAllWithPaging(model, size, pageNum);
+            var result = await _discountService.GetAllWithPaging(model, size, pageNum);
             _logger.LogInformation($"Get all products ");
-            return Ok(new SuccessResponse<DynamicModelResponse<CampaignSearchViewModel>>
+            return Ok(new SuccessResponse<DynamicModelResponse<DiscountSearchViewModel>>
                 (
                     (int)HttpStatusCode.OK, "Get success.", result)
                 );
         }
 
         /// <summary>
-        /// This feature allow user to get campaign by id
+        /// This feature allow user to get discount by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -129,9 +128,10 @@ namespace coffee_kiosk_solution.Controllers
         [MapToApiVersion("1")]
         public async Task<IActionResult> GetCampaignById(Guid id)
         {
-            var result = await _campaignService.GetById(id);
+            var result = await _discountService.GetById(id);
             _logger.LogInformation($"Get product {result.Id}");
-            return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Get success.", result));
+            return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Get success.", result));
         }
+
     }
 }

@@ -20,20 +20,23 @@ namespace coffee_kiosk_solution.Data.Repositories.impl
 
         public ICampaignRepository CampaignRepository { get; set; }
 
+        public IDiscountRepository DiscountRepository { get; set; }
+
         public IProductImageRepository ProductImageRepository { get; set; }
 
         public UnitOfWork(Coffee_KioskContext context, IAccountRepository accountRepository,
             ICategoryRepository categoryRepository, IProductRepository productRepository,
-            IProductImageRepository productImageRepository, IAreaRepository areaRepository,
-            ICampaignRepository campaignRepository)
+            IAreaRepository areaRepository, ICampaignRepository campaignRepository,
+            IDiscountRepository discountRepository, IProductImageRepository productImageRepository)
         {
             _context = context;
             AccountRepository = accountRepository;
             CategoryRepository = categoryRepository;
             ProductRepository = productRepository;
-            ProductImageRepository = productImageRepository;
             AreaRepository = areaRepository;
             CampaignRepository = campaignRepository;
+            DiscountRepository = discountRepository;
+            ProductImageRepository = productImageRepository;
         }
 
         public void Save()
