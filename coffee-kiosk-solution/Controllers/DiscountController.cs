@@ -61,7 +61,7 @@ namespace coffee_kiosk_solution.Controllers
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _discountService.Update(model);
-            _logger.LogInformation($"Update campaign {result.Id} by admin with id: {token.Id}");
+            _logger.LogInformation($"Update discount {result.Id} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Update success.", result));
         }
 
@@ -78,7 +78,7 @@ namespace coffee_kiosk_solution.Controllers
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _discountService.ChangeStatus(id);
-            _logger.LogInformation($"Change Status campaign {result.Id} by admin with id: {token.Id}");
+            _logger.LogInformation($"Change Status discount {result.Id} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Update success.", result));
         }
 
@@ -126,7 +126,7 @@ namespace coffee_kiosk_solution.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> GetCampaignById(Guid id)
+        public async Task<IActionResult> GetDiscountById(Guid id)
         {
             var result = await _discountService.GetById(id);
             _logger.LogInformation($"Get product {result.Id}");

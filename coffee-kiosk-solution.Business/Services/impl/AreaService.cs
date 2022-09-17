@@ -114,8 +114,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
             //If Delete func is in use
             /*if (model.Status == (int)StatusConstants.Deleted)
             {
-                _logger.LogError("Cannot search product which is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search product which is deleted.");
+                _logger.LogError("Cannot search area which is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search area which is deleted.");
             }*/
 
             var listArea = _unitOfWork.AreaRepository
@@ -184,7 +184,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             /*if (area.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("This area is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This area is deleted.");
             }*/
 
 

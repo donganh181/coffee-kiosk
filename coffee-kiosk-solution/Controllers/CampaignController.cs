@@ -113,7 +113,7 @@ namespace coffee_kiosk_solution.Controllers
             int size, int pageNum = CommonConstants.DefaultPage)
         {
             var result = await _campaignService.GetAllWithPaging(model, size, pageNum);
-            _logger.LogInformation($"Get all products ");
+            _logger.LogInformation($"Get all campaigns ");
             return Ok(new SuccessResponse<DynamicModelResponse<CampaignSearchViewModel>>
                 (
                     (int)HttpStatusCode.OK, "Get success.", result)
@@ -130,7 +130,7 @@ namespace coffee_kiosk_solution.Controllers
         public async Task<IActionResult> GetCampaignById(Guid id)
         {
             var result = await _campaignService.GetById(id);
-            _logger.LogInformation($"Get product {result.Id}");
+            _logger.LogInformation($"Get campaign {result.Id}");
             return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Get success.", result));
         }
     }
