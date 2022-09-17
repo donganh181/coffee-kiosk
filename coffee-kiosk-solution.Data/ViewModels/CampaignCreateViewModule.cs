@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace coffee_kiosk_solution.Data.ViewModels
 {
-    public class CampaignCreateViewModule
+    public class CampaignCreateViewModle
     {
         [Required]
         public string Name { get; set; }

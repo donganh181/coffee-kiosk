@@ -40,7 +40,7 @@ namespace coffee_kiosk_solution.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> CreateNewCampaign([FromBody] CampaignCreateViewModule model)
+        public async Task<IActionResult> CreateNewCampaign([FromBody] CampaignCreateViewModle model)
         {
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
@@ -120,5 +120,18 @@ namespace coffee_kiosk_solution.Controllers
                 );
         }
 
+        /// <summary>
+        /// This feature allow user to get camppaign by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        [MapToApiVersion("1")]
+        public async Task<IActionResult> GetCampaignById(Guid id)
+        {
+            var result = await _campaignService.GetById(id);
+            _logger.LogInformation($"Get product {result.Id}");
+            return Ok(new SuccessResponse<CampaignViewModel>((int)HttpStatusCode.OK, "Get success.", result));
+        }
     }
 }

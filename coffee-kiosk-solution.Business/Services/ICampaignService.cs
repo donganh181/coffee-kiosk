@@ -10,7 +10,7 @@ namespace coffee_kiosk_solution.Business.Services
 {
     public interface ICampaignService
     {
-        Task<CampaignViewModel> Create(CampaignCreateViewModule model);
+        Task<CampaignViewModel> Create(CampaignCreateViewModle model);
         Task<CampaignViewModel> Update(CampaignUpdateViewModel model);
         Task<CampaignViewModel> ChangeStatus(Guid id);
         Task<CampaignViewModel> Delete(Guid id);

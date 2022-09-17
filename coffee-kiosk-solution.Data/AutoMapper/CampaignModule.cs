@@ -11,14 +11,14 @@ namespace coffee_kiosk_solution.Data.AutoMapper
 {
     public static class CampaignModule
     {
-        public static void ConflgCampaignModule(this IMapperConfigurationExpression mc)
+        public static void ConfigCampaignModule(this IMapperConfigurationExpression mc)
         {
             mc.CreateMap<TblCampaign, CampaignViewModel>()
                 .ForMember(src => src.AreaName, opt => opt.MapFrom(des => des.Area.AreaName));
             mc.CreateMap<CampaignViewModel, TblCampaign>();
 
-            mc.CreateMap<TblCampaign, CampaignCreateViewModule>();
-            mc.CreateMap<CampaignCreateViewModule, TblCampaign>();
+            mc.CreateMap<TblCampaign, CampaignCreateViewModle>();
+            mc.CreateMap<CampaignCreateViewModle, TblCampaign>();
 
             mc.CreateMap<TblCampaign, CampaignUpdateViewModel>();
             mc.CreateMap<CampaignUpdateViewModel, TblCampaign>();

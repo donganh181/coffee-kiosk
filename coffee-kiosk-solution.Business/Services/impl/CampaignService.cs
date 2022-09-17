@@ -81,7 +81,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         }
 
-        public async Task<CampaignViewModel> Create(CampaignCreateViewModule model)
+        public async Task<CampaignViewModel> Create(CampaignCreateViewModle model)
         {
             var campaign = _mapper.Map<TblCampaign>(model);
             campaign.Status = (int)StatusConstants.Activate;

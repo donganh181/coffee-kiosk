@@ -18,7 +18,7 @@ namespace coffee_kiosk_solution.App_Start
                 mc.ConfigAccountModule();
                 mc.ConfigCategoryModule();
                 mc.ConfigProductModule();
-                mc.ConflgCampaignModule();
+                mc.ConfigCampaignModule();
                 mc.ConfigAreaModule();
                 mc.ConfigProductImageModule();
             });
