@@ -12,8 +12,7 @@ namespace coffee_kiosk_solution.Data.ViewModels
     {
         [BindNever]
         public Guid? Id { get; set; }
-        [Skip, BindNever]
-        public float DiscountPercentage { get; set; }
+        public double DiscountPercentage { get; set; }
         [BindNever]
         public Guid? ProductId { get; set; }
         [BindNever]
