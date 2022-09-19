@@ -250,6 +250,29 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 _logger.LogError("This discount is deleted.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This discount is deleted.");
             }
+
+            var campaign = await _campaignService.GetById(model.CampaignId);
+
+            var listCheck = await _campaignService.GetListCampaignInTheSameTime(campaign.AreaId, campaign.StartingDate, campaign.ExpiredDate);
+            if (listCheck.Count > 0)
+            {
+                foreach (var check in listCheck)
+                {
+                    var listDiscount = await GetListDiscountByCampaign(check.Id);
+                    if (listDiscount.Count > 0)
+                    {
+                        foreach (var item in listDiscount)
+                        {
+                            if (item.ProductId.Equals(model.ProductId))
+                            {
+                                _logger.LogError("This product has been set in another campaign in the same time.");
+                                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product has been set in another campaign in the same time.");
+                            }
+                        }
+                    }
+                }
+            }
+
             discount.DiscountPercentage = model.DiscountPercentage;
             discount.ProductId = model.ProductId;
             discount.CampaignId = model.CampaignId;
