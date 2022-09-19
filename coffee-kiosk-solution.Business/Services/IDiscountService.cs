@@ -16,6 +16,7 @@ namespace coffee_kiosk_solution.Business.Services
         Task<DiscountViewModel> Delete(Guid id);
         Task<DiscountViewModel> GetById(Guid id);
         Task<DynamicModelResponse<DiscountSearchViewModel>> GetAllWithPaging(DiscountSearchViewModel model, int size, int pageNum);
+        Task<List<DiscountViewModel>> GetListDiscountByCampaign(Guid campaignId);
 
     }
 }

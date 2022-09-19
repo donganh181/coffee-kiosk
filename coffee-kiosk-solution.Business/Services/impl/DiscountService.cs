@@ -24,13 +24,17 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IDiscountService> _logger;
+        private readonly ICampaignService _campaignService;
 
-        public DiscountService(IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork, ILogger<IDiscountService> logger)
+        public DiscountService(IMapper mapper, IConfiguration configuration,
+            IUnitOfWork unitOfWork, ILogger<IDiscountService> logger,
+            ICampaignService campaignService)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _campaignService = campaignService;
         }
 
         public async Task<DiscountViewModel> ChangeStatus(Guid id)
@@ -80,6 +84,29 @@ namespace coffee_kiosk_solution.Business.Services.impl
         public async Task<DiscountViewModel> Create(DiscountCreateViewModel model)
         {
             var discount = _mapper.Map<TblDiscount>(model);
+
+            var campaign = await _campaignService.GetById(model.CampaignId);
+
+            var listCheck = await _campaignService.GetListCampaignInTheSameTime(campaign.AreaId,campaign.StartingDate, campaign.ExpiredDate);
+            if(listCheck.Count > 0)
+            {
+                foreach(var check in listCheck)
+                {
+                    var listDiscount = await GetListDiscountByCampaign(check.Id);
+                    if(listDiscount.Count > 0)
+                    {
+                        foreach(var item in listDiscount)
+                        {
+                            if (item.ProductId.Equals(model.ProductId))
+                            {
+                                _logger.LogError("This product has been set in another campaign in the same time.");
+                                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product has been set in another campaign in the same time.");
+                            }
+                        }
+                    }
+                }
+            }
+
             discount.Status = (int)StatusConstants.Activate;
 
             try
@@ -198,6 +225,15 @@ namespace coffee_kiosk_solution.Business.Services.impl
             return discount;
         }
 
+        public async Task<List<DiscountViewModel>> GetListDiscountByCampaign(Guid campaignId)
+        {
+            var listDiscount = await _unitOfWork.DiscountRepository
+                .Get(d => d.CampaignId.Equals(campaignId))
+                .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            return listDiscount;
+        }
+
         public async Task<DiscountViewModel> Update(DiscountUpdateViewModel model)
         {
             var discount = await _unitOfWork.DiscountRepository
@@ -215,6 +251,31 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This discount is deleted.");
             }
 
+            var campaign = await _campaignService.GetById(model.CampaignId);
+
+            var listCheck = await _campaignService.GetListCampaignInTheSameTime(campaign.AreaId, campaign.StartingDate, campaign.ExpiredDate);
+            if (listCheck.Count > 0)
+            {
+                foreach (var check in listCheck)
+                {
+                    var listDiscount = await GetListDiscountByCampaign(check.Id);
+                    if (listDiscount.Count > 0)
+                    {
+                        foreach (var item in listDiscount)
+                        {
+                            if (item.ProductId.Equals(model.ProductId))
+                            {
+                                _logger.LogError("This product has been set in another campaign in the same time.");
+                                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product has been set in another campaign in the same time.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            discount.DiscountPercentage = model.DiscountPercentage;
+            discount.ProductId = model.ProductId;
+            discount.CampaignId = model.CampaignId;
             try
             {
                 _unitOfWork.DiscountRepository.Update(discount);

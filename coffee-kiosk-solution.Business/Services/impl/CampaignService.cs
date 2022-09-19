@@ -230,6 +230,18 @@ namespace coffee_kiosk_solution.Business.Services.impl
             return campaign;
         }
 
+        public async Task<List<CampaignViewModel>> GetListCampaignInTheSameTime(Guid areaId, DateTime startingDate, DateTime expiredDate)
+        {
+            var listCampaign = await _unitOfWork.CampaignRepository
+                .Get(c => c.AreaId.Equals(areaId) 
+                        && c.Status == (int)StatusConstants.Activate 
+                        && ((startingDate >= c.StartingDate && expiredDate <= c.ExpiredDate)
+                        || (c.StartingDate >= startingDate && c.ExpiredDate <= expiredDate)))
+                .ProjectTo<CampaignViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            return listCampaign;
+        }
+
         public async Task<CampaignViewModel> Update(CampaignUpdateViewModel model)
         {
             var campaign = await _unitOfWork.CampaignRepository
