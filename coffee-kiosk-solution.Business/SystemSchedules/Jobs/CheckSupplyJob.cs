@@ -23,7 +23,7 @@ namespace coffee_kiosk_solution.Business.SystemSchedules.Jobs
             {
                 _logger.LogError("Server Error.");
             }*/
-            _logger.LogInformation("check template job running...");
+            _logger.LogInformation("check supply job running...");
         }
     }
 }

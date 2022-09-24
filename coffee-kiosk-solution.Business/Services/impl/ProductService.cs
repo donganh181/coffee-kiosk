@@ -118,8 +118,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
             catch(Exception e)
             {
-                if(e == null) { 
-                }
                 if (e.InnerException.Message.Contains("Cannot insert duplicate key"))
                 {
                     _logger.LogError("Name is duplicated.");
