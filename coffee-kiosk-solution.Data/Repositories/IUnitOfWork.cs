@@ -15,8 +15,8 @@ namespace coffee_kiosk_solution.Data.Repositories
         IAreaRepository AreaRepository { get; }
         ICampaignRepository CampaignRepository { get; }
         IDiscountRepository DiscountRepository { get; }
-
         IProductImageRepository ProductImageRepository { get; }
+        IShopRepository ShopRepository { get; }
         void Save();
         Task SaveAsync();
     }

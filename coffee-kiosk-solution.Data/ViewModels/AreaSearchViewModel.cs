@@ -11,7 +11,7 @@ namespace coffee_kiosk_solution.Data.ViewModels
     public class AreaSearchViewModel
     {
         [BindNever]
-        Guid Id { get; set; }
+        public Guid? Id { get; set; }
         [String]
         public string AreaName { get; set; }
     }

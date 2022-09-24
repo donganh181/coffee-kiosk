@@ -23,10 +23,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<ICampaignService> _logger;
+        private readonly ILogger<IAreaService> _logger;
 
         public AreaService(IMapper mapper, IConfiguration configuration,
-            IUnitOfWork unitOfWork, ILogger<ICampaignService> logger)
+            IUnitOfWork unitOfWork, ILogger<IAreaService> logger)
         {
             _mapper = mapper;
             _configuration = configuration;
@@ -118,6 +118,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search area which is deleted.");
             }*/
 
+       
             var listArea = _unitOfWork.AreaRepository
                 .Get()
                 .ProjectTo<AreaSearchViewModel>(_mapper.ConfigurationProvider)

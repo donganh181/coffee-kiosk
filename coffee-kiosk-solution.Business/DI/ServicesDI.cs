@@ -40,6 +40,9 @@ namespace coffee_kiosk_solution.Business.DI
 
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IProductImageService, ProductImageService>();
+
+            services.AddScoped<IShopRepository, ShopRepository>();
+            services.AddScoped<IShopService, ShopService>();
         }
     }
 }
