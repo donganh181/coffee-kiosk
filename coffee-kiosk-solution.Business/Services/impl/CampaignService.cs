@@ -46,17 +46,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
-            if (campaign.ExpiredDate <= DateTime.Now)
-            {
-                _logger.LogError("Invalid Expired Date");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date");
-            }
-            if (campaign.ExpiredDate <= campaign.StartingDate)
-            {
-                _logger.LogError("Invalid Expired Date and Starting Date");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid Expired Date and Starting Date");
-            }
-
             if (campaign.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("This campaign is deleted.");
@@ -66,11 +55,16 @@ namespace coffee_kiosk_solution.Business.Services.impl
             {
                 campaign.Status = (int)StatusConstants.Deactivate;
             }
+            else if(campaign.Status == (int)StatusConstants.Deactivate && 
+                DateTime.Compare(campaign.ExpiredDate, DateTime.Now) < 0)
+            {
+                _logger.LogError("This campaign cannot change status because it is expired.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This campaign cannot change status because it is expired.");
+            }
             else
             {
                 campaign.Status = (int)StatusConstants.Activate;
             }
-
             try
             {
                 _unitOfWork.CampaignRepository.Update(campaign);
@@ -301,6 +295,33 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     _logger.LogError("Invalid data.");
                     throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
                 }
+            }
+        }
+
+        public async Task<bool> ValidateStatusOfCampaignByDay()
+        {
+            var now = DateTime.Now;
+            var listCampaign = await _unitOfWork.CampaignRepository
+                .Get(c => c.Status != (int)StatusConstants.Deactivate 
+                        && c.Status != (int)StatusConstants.Deleted
+                        && DateTime.Compare((DateTime)c.ExpiredDate, now) < 0)
+                .ToListAsync();
+            try
+            {
+                foreach(var campaignUpdate in listCampaign)
+                {
+                    campaignUpdate.Status = (int)StatusConstants.Deactivate;
+
+                    _unitOfWork.CampaignRepository.Update(campaignUpdate);
+                    await _unitOfWork.SaveAsync();
+                    _logger.LogInformation($"Campaign {campaignUpdate.Name} Status has been changed to Deactivate");
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
             }
         }
     }
