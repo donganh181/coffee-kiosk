@@ -17,5 +17,6 @@ namespace coffee_kiosk_solution.Business.Services
         Task<CampaignViewModel> GetById(Guid id);
         Task<DynamicModelResponse<CampaignSearchViewModel>> GetAllWithPaging(CampaignSearchViewModel model, int size, int pageNum);
         Task<List<CampaignViewModel>> GetListCampaignInTheSameTime(Guid areaId, DateTime startingDate, DateTime expiredDate);
+        Task<bool> ValidateStatusOfCampaignByDay();
     }
 }
