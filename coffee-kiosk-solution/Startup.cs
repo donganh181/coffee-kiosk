@@ -80,7 +80,7 @@ namespace coffee_kiosk_solution
 
                 // quickest way to create a job with single trigger is to use ScheduleJob
                 // (requires version 3.2)
-                q.ScheduleJob<CheckSupplyJob>(trigger => trigger
+                q.ScheduleJob<CheckCampaignJob>(trigger => trigger
                     .WithIdentity("Combined Configuration Trigger")
                     .StartAt(DateBuilder.EvenSecondDate(DateTimeOffset.UtcNow.AddSeconds(7)))
                     .WithCronSchedule("0 0 0 * * ?")

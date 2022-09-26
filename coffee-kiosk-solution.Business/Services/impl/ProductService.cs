@@ -21,17 +21,15 @@ namespace coffee_kiosk_solution.Business.Services.impl
     public class ProductService : IProductService
     {
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IProductService> _logger;
         private readonly IProductImageService _productImageService;
 
-        public ProductService(IMapper mapper, IConfiguration configuration,
+        public ProductService(IMapper mapper,
             IUnitOfWork unitOfWork, ILogger<IProductService> logger,
             IProductImageService productImageService)
         {
             _mapper = mapper;
-            _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _productImageService = productImageService;
@@ -63,8 +61,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 product.Status = (int)StatusConstants.Activate;
             }
 
-            var listImage = await _productImageService.GetListImageByProductId(id);
-
             try
             {
                 _unitOfWork.ProductRepository.Update(product);
@@ -73,11 +69,9 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 var result = await _unitOfWork.ProductRepository
                     .Get(p => p.Id.Equals(id))
                     .Include(a => a.Category)
+                    .Include(b => b.TblProductImages)
                     .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
-
-                result.ListImage = listImage;
-
                 return result;
             }
             catch (Exception)
@@ -89,7 +83,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         public async Task<ProductViewModel> Create(ProductCreateViewModel model)
         {
-            List<ProductImageViewModel> listImage = new List<ProductImageViewModel>();
             var product = _mapper.Map<TblProduct>(model);
             product.Status = (int)StatusConstants.Activate;
             try
@@ -105,15 +98,14 @@ namespace coffee_kiosk_solution.Business.Services.impl
                         ProductId = product.Id
                     };
                     var img = await _productImageService.Create(imageModel);
-                    listImage.Add(img);
                 }
 
                 var result = await _unitOfWork.ProductRepository
                     .Get(p => p.Id.Equals(product.Id))
                     .Include(a => a.Category)
+                    .Include(b => b.TblProductImages)
                     .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
-                result.ListImage = listImage;
                 return result;
             }
             catch(Exception e)
@@ -179,14 +171,9 @@ namespace coffee_kiosk_solution.Business.Services.impl
             var listProduct = _unitOfWork.ProductRepository
                 .Get(p => p.Status != (int)StatusConstants.Deleted)
                 .Include(a => a.Category)
+                .Include(b => b.TblProductImages)
                 .ProjectTo<ProductSearchViewModel>(_mapper.ConfigurationProvider)
                 .ToList();
-
-            foreach(var product in listProduct)
-            {
-                var listImage = await _productImageService.GetListImageByProductId(Guid.Parse(product.Id+""));
-                product.ListImage = listImage;
-            }
 
             var listPaging = listProduct
                 .AsQueryable()
@@ -219,6 +206,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             var product = await _unitOfWork.ProductRepository
                 .Get(p => p.Id.Equals(id))
                 .Include(a => a.Category)
+                .Include(b => b.TblProductImages)
                 .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
             if (product == null)
@@ -232,8 +220,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 _logger.LogError("This product is deleted.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This product is deleted.");
             }
-            var listImage = await _productImageService.GetListImageByProductId(id);
-            product.ListImage = listImage;
             return product;
         }
 
@@ -267,10 +253,9 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 var result = await _unitOfWork.ProductRepository
                     .Get(p => p.Id.Equals(model.Id))
                     .Include(a => a.Category)
+                    .Include(b => b.TblProductImages)
                     .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
-                var listImage = await _productImageService.GetListImageByProductId(model.Id);
-                result.ListImage = listImage;
                 return result;
             }
             catch(Exception e)

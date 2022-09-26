@@ -14,7 +14,8 @@ namespace coffee_kiosk_solution.Data.AutoMapper
         public static void ConfigProductModule(this IMapperConfigurationExpression mc)
         {
             mc.CreateMap<TblProduct, ProductViewModel>()
-                .ForMember(src => src.CategoryName, opt => opt.MapFrom(des => des.Category.Name));
+                .ForMember(src => src.CategoryName, opt => opt.MapFrom(des => des.Category.Name))
+                .ForMember(src => src.ListImage, opt => opt.MapFrom(des => des.TblProductImages.ToList()));
             mc.CreateMap<ProductViewModel, TblProduct>();
 
             mc.CreateMap<TblProduct, ProductCreateViewModel>();
@@ -24,7 +25,8 @@ namespace coffee_kiosk_solution.Data.AutoMapper
             mc.CreateMap<ProductUpdateViewModel, TblProduct>();
 
             mc.CreateMap<TblProduct, ProductSearchViewModel>()
-                .ForMember(src => src.CategoryName, opt => opt.MapFrom(des => des.Category.Name));
+                .ForMember(src => src.CategoryName, opt => opt.MapFrom(des => des.Category.Name))
+                .ForMember(src => src.ListImage, opt => opt.MapFrom(des => des.TblProductImages.ToList()));
             mc.CreateMap<ProductSearchViewModel, TblProduct>();
         }
     }
