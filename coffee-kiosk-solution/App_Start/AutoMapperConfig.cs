@@ -23,6 +23,8 @@ namespace coffee_kiosk_solution.App_Start
                 mc.ConfigDiscountModule();
                 mc.ConfigProductImageModule();
                 mc.ConfigShopModule();
+                mc.ConfigOrderModule();
+                mc.ConfigOrderDetailModule();
             });
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

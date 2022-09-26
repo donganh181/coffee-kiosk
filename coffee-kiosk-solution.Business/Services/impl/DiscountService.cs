@@ -25,16 +25,18 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IDiscountService> _logger;
         private readonly ICampaignService _campaignService;
+        private readonly IProductService _productService;
 
         public DiscountService(IMapper mapper, IConfiguration configuration,
             IUnitOfWork unitOfWork, ILogger<IDiscountService> logger,
-            ICampaignService campaignService)
+            ICampaignService campaignService, IProductService productService)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _campaignService = campaignService;
+            _productService = productService;
         }
 
         public async Task<DiscountViewModel> ChangeStatus(Guid id)
@@ -84,18 +86,18 @@ namespace coffee_kiosk_solution.Business.Services.impl
         public async Task<DiscountViewModel> Create(DiscountCreateViewModel model)
         {
             var discount = _mapper.Map<TblDiscount>(model);
-
             var campaign = await _campaignService.GetById(model.CampaignId);
+            var product = await _productService.GetById(model.ProductId);
 
-            var listCheck = await _campaignService.GetListCampaignInTheSameTime(campaign.AreaId,campaign.StartingDate, campaign.ExpiredDate);
-            if(listCheck.Count > 0)
+            var listCheck = await _campaignService.GetListCampaignInTheSameTime(campaign.AreaId, campaign.StartingDate, campaign.ExpiredDate);
+            if (listCheck.Count > 0)
             {
-                foreach(var check in listCheck)
+                foreach (var check in listCheck)
                 {
                     var listDiscount = await GetListDiscountByCampaign(check.Id);
-                    if(listDiscount.Count > 0)
+                    if (listDiscount.Count > 0)
                     {
-                        foreach(var item in listDiscount)
+                        foreach (var item in listDiscount)
                         {
                             if (item.ProductId.Equals(model.ProductId))
                             {
@@ -105,6 +107,18 @@ namespace coffee_kiosk_solution.Business.Services.impl
                         }
                     }
                 }
+            }
+
+            if (campaign.Status == (int)StatusConstants.Deleted)
+            {
+                _logger.LogError("The Campaign selected has been deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "The Campaign selected has been deleted.");
+            }
+
+            if (product.Status == (int)StatusConstants.Deleted)
+            {
+                _logger.LogError("The Product selected has been deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "The Product selected has been deleted.");
             }
 
             discount.Status = (int)StatusConstants.Activate;
@@ -252,6 +266,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
 
             var campaign = await _campaignService.GetById(model.CampaignId);
+            var product = await _productService.GetById(model.ProductId);
 
             var listCheck = await _campaignService.GetListCampaignInTheSameTime(campaign.AreaId, campaign.StartingDate, campaign.ExpiredDate);
             if (listCheck.Count > 0)
@@ -271,6 +286,18 @@ namespace coffee_kiosk_solution.Business.Services.impl
                         }
                     }
                 }
+            }
+
+            if (campaign.Status == (int)StatusConstants.Deleted)
+            {
+                _logger.LogError("The Campaign selected has been deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "The Campaign selected has been deleted.");
+            }
+
+            if (product.Status == (int)StatusConstants.Deleted)
+            {
+                _logger.LogError("The Product selected has been deleted.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "The Product selected has been deleted.");
             }
 
             discount.DiscountPercentage = model.DiscountPercentage;
