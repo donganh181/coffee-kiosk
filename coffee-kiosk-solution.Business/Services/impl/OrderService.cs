@@ -25,16 +25,13 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IOrderService> _logger;
-        private readonly IOrderRepository _orderRepository;
 
-        public OrderService(IMapper mapper, IConfiguration configuration,
-            IUnitOfWork unitOfWork, ILogger<IOrderService> logger, IOrderRepository orderRepository)
+        public OrderService(IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork, ILogger<IOrderService> logger)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _orderRepository = orderRepository;
         }
 
         public async Task<OrderViewModel> Create(OrderCreateViewModel model)

@@ -118,7 +118,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search area which is deleted.");
             }*/
 
-       
+
             var listArea = _unitOfWork.AreaRepository
                 .Get()
                 .ProjectTo<AreaSearchViewModel>(_mapper.ConfigurationProvider)
