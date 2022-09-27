@@ -48,16 +48,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
             catch (Exception e)
             {
-                if (e.InnerException.Message.Contains("Cannot insert duplicate key"))
-                {
-                    _logger.LogError("Name is duplicated.");
-                    throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Name is duplicated.");
-                }
-                else
-                {
-                    _logger.LogError("Invalid data.");
-                    throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
-                }
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
             }
         }
 
@@ -66,56 +58,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
             throw new NotImplementedException();
         }
 
-        // Delete Area(Use if needed)
-        /*
-        public async Task<AreaViewModel> Delete(Guid id)
-        {
-            var area = await _unitOfWork.AreaRepository
-               .Get(p => p.Id.Equals(id))
-               .FirstOrDefaultAsync();
-
-            if (area == null)
-            {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
-            }
-
-            if (area.Status == (int)StatusConstants.Deleted)
-            {
-                _logger.LogError("This area is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This area is deleted.");
-            }
-            area.Status = (int)StatusConstants.Deleted;
-
-            try
-            {
-                _unitOfWork.AreaRepository.Update(area);
-                await _unitOfWork.SaveAsync();
-
-                var result = await _unitOfWork.AreaRepository
-                    .Get(p => p.Id.Equals(id))
-                    .ProjectTo<CampaignViewModel>(_mapper.ConfigurationProvider)
-                    .FirstOrDefaultAsync();
-                return result;
-            }
-            catch (Exception)
-            {
-                _logger.LogError("Invalid data.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
-            }
-        }*/
-
 
 
         public async Task<DynamicModelResponse<AreaSearchViewModel>> GetAllWithPaging(AreaSearchViewModel model, int size, int pageNum)
         {
-            //If Delete func is in use
-            /*if (model.Status == (int)StatusConstants.Deleted)
-            {
-                _logger.LogError("Cannot search area which is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search area which is deleted.");
-            }*/
-
 
             var listArea = _unitOfWork.AreaRepository
                 .Get()
@@ -161,11 +107,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
-            /*if (area.Status == (int)StatusConstants.Deleted)
-            {
-                _logger.LogError("This area is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This area is deleted.");
-            }*/
             return area;
         }
 
@@ -180,15 +121,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
-            /*if (area.Status == (int)StatusConstants.Deleted)
-            {
-                _logger.LogError("This area is deleted.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This area is deleted.");
-            }*/
-
-
-            //campaign.Status = model.Status;
-
+            area.AreaName = model.AreaName;
 
             try
             {
@@ -203,16 +136,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
             catch (Exception e)
             {
-                if (e.InnerException.Message.Contains("Cannot insert duplicate key"))
-                {
-                    _logger.LogError("Name is duplicated.");
-                    throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Name is duplicated.");
-                }
-                else
-                {
-                    _logger.LogError("Invalid data.");
-                    throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
-                }
+
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
+
             }
         }
     }
