@@ -21,15 +21,13 @@ namespace coffee_kiosk_solution.Business.Services.impl
     public class AreaService : IAreaService
     {
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IAreaService> _logger;
 
-        public AreaService(IMapper mapper, IConfiguration configuration,
-            IUnitOfWork unitOfWork, ILogger<IAreaService> logger)
+        public AreaService(IMapper mapper, IUnitOfWork unitOfWork,
+            ILogger<IAreaService> logger)
         {
             _mapper = mapper;
-            _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
@@ -42,7 +40,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 await _unitOfWork.AreaRepository.InsertAsync(area);
                 await _unitOfWork.SaveAsync();
 
-                var result = await _unitOfWork.CampaignRepository
+                var result = await _unitOfWork.AreaRepository
                     .Get(p => p.Id.Equals(area.Id))
                     .ProjectTo<AreaViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
