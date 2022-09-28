@@ -36,7 +36,6 @@ namespace coffee_kiosk_solution.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize(Roles = "User")]
         [HttpPost]
         [MapToApiVersion("1")]
         public async Task<ActionResult> CreateNewOrderDetail([FromBody] OrderDetailCreateViewModel model)
