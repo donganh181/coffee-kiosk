@@ -78,14 +78,34 @@ namespace coffee_kiosk_solution
                 q.UseInMemoryStore();
                 q.UseDefaultThreadPool(tp => { tp.MaxConcurrency = 10; });
 
+                ITrigger campaignTrigger = TriggerBuilder.Create()
+                                        .WithIdentity("campaignJob")
+                                        .StartNow()
+                                        .WithCronSchedule("0 0 0 * * ?")
+                                        .Build();
+
+                
+                ITrigger supplyTrigger = TriggerBuilder.Create()
+                                        .WithIdentity("supplyJob")
+                                        .StartNow()
+                                        .WithCronSchedule("0 0 12 ? * SUN")
+                                        .Build();
+
+                
                 // quickest way to create a job with single trigger is to use ScheduleJob
                 // (requires version 3.2)
                 q.ScheduleJob<CheckCampaignJob>(trigger => trigger
-                    .WithIdentity("Combined Configuration Trigger")
+                    .WithIdentity("campaignJob")
                     .StartAt(DateBuilder.EvenSecondDate(DateTimeOffset.UtcNow.AddSeconds(7)))
                     .WithCronSchedule("0 0 0 * * ?")
                     .WithDescription("my awesome trigger configured for a job with single call")
                 );
+                q.ScheduleJob<CheckSupplyJob>(trigger => trigger
+                     .WithIdentity("supplyJob")
+                     .StartAt(DateBuilder.EvenSecondDate(DateTimeOffset.UtcNow.AddSeconds(7)))
+                     .WithCronSchedule("0 0 12 ? * SUN")
+                     .WithDescription("my awesome trigger configured for a job with single call")
+                 );
             });
             // Quartz.Extensions.Hosting allows you to fire background service that handles scheduler lifecycle
             services.AddQuartzHostedService(options =>

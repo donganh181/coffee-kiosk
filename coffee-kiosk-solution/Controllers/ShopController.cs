@@ -110,7 +110,9 @@ namespace coffee_kiosk_solution.Controllers
         [MapToApiVersion("1")]
         public async Task<IActionResult> GetShopById(Guid id)
         {
-            var result = await _shopService.GetById(id);
+            var request = Request;
+            TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
+            var result = await _shopService.GetById(id, token.Role, token.Id);
             _logger.LogInformation($"Get shop {result.Id}");
             return Ok(new SuccessResponse<ShopViewModel>((int)HttpStatusCode.OK, "Get success.", result));
         }
@@ -127,7 +129,9 @@ namespace coffee_kiosk_solution.Controllers
         [MapToApiVersion("1")]
         public async Task<IActionResult> GetAllProductsWithPaging([FromQuery] ShopSearchViewModel model, int size, int pageNum = CommonConstants.DefaultPage)
         {
-            var result = await _shopService.GetAllWithPaging(model, size, pageNum);
+            var request = Request;
+            TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
+            var result = await _shopService.GetAllWithPaging(model, size, pageNum, token.Role, token.Id);
             _logger.LogInformation($"Get all shops ");
             return Ok(new SuccessResponse<DynamicModelResponse<ShopSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
         }
