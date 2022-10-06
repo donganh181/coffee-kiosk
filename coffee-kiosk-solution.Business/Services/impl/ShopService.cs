@@ -214,29 +214,46 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
         }
 
-        public async Task<DynamicModelResponse<ShopSearchViewModel>> GetAllWithPaging(ShopSearchViewModel model, int size, int pageNum)
+        public async Task<DynamicModelResponse<ShopSearchViewModel>> GetAllWithPaging(ShopSearchViewModel model, int size, int pageNum, string role, Guid managerId)
         {
             if (model.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("Cannot search product which is deleted.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot search product which is deleted.");
             }
-
-            var listShop = _unitOfWork.ShopRepository
+            IQueryable<ShopSearchViewModel> listShop = null;
+            if (role.Equals(RoleConstants.ADMIN))
+            {
+                listShop = _unitOfWork.ShopRepository
                 .Get(s => s.Status != (int)StatusConstants.Deleted)
                 .Include(a => a.Account)
                 .Include(b => b.Area)
                 .ProjectTo<ShopSearchViewModel>(_mapper.ConfigurationProvider)
-                .OrderByDescending(p => p.Name)
                 .DynamicFilter(model)
-                .PagingIQueryable(pageNum, size, CommonConstants.LimitPaging,
-                CommonConstants.DefaultPaging);
+                .AsQueryable()
+                .OrderByDescending(p => p.Name);
+            }
+            else
+            {
+                listShop = _unitOfWork.ShopRepository
+                .Get(s => s.Status != (int)StatusConstants.Deleted
+                    && s.AccountId.Equals(managerId))
+                .Include(a => a.Account)
+                .Include(b => b.Area)
+                .ProjectTo<ShopSearchViewModel>(_mapper.ConfigurationProvider)
+                .DynamicFilter(model)
+                .AsQueryable()
+                .OrderByDescending(p => p.Name);
+            }
 
-            if (listShop.Data.ToList().Count < 1)
+            if(listShop.ToList().Count < 1)
             {
                 _logger.LogError("Cannot Found.");
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
             }
+
+            var listPaging = listShop
+                .PagingIQueryable(pageNum, size, CommonConstants.LimitPaging, CommonConstants.DefaultPaging);
 
             var result = new DynamicModelResponse<ShopSearchViewModel>
             {
@@ -244,14 +261,14 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 {
                     Page = pageNum,
                     Size = size,
-                    Total = listShop.Total
+                    Total = listPaging.Total
                 },
-                Data = listShop.Data.ToList()
+                Data = listPaging.Data.ToList()
             };
             return result;
         }
 
-        public async Task<ShopViewModel> GetById(Guid id)
+        public async Task<ShopViewModel> GetById(Guid id, string role, Guid managerId)
         {
             var shop = await _unitOfWork.ShopRepository
                     .Get(s => s.Id.Equals(id))
@@ -264,7 +281,11 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 _logger.LogError("Not Found");
                 throw new ErrorResponse((int)HttpStatusCode.NotFound, "Not found.");
             }
-
+            if (!role.Equals(RoleConstants.ADMIN) && !shop.AccountId.Equals(managerId))
+            {
+                _logger.LogError("This shop is not belong to this manager.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This shop is not belong to this manager.");
+            }
             if (shop.Status == (int)StatusConstants.Deleted)
             {
                 _logger.LogError("This shop is deleted.");

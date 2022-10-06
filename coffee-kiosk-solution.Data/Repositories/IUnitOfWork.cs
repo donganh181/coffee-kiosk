@@ -17,6 +17,7 @@ namespace coffee_kiosk_solution.Data.Repositories
         IDiscountRepository DiscountRepository { get; }
         IProductImageRepository ProductImageRepository { get; }
         IShopRepository ShopRepository { get; }
+        ISupplyRepository SupplyRepository { get; }
         IOrderRepository OrderRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }
         void Save();

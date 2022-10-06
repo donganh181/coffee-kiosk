@@ -3,30 +3,31 @@ using Microsoft.Extensions.Logging;
 using Quartz;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace coffee_kiosk_solution.Business.SystemSchedules.Jobs
 {
-    public class CheckCampaignJob : IJob
+    public class CheckSupplyJob : IJob
     {
-        private readonly ILogger<CheckCampaignJob> _logger;
-        private readonly ICampaignService _campaignService;
+        private readonly ILogger<CheckSupplyJob> _logger;
+        private readonly ISupplyService _supplyService;
 
-        public CheckCampaignJob(ILogger<CheckCampaignJob> logger, ICampaignService campaignService)
+        public CheckSupplyJob(ILogger<CheckSupplyJob> logger, ISupplyService supplyService)
         {
             _logger = logger;
-            _campaignService = campaignService;
+            _supplyService = supplyService;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var check = await _campaignService.ValidateStatusOfCampaignByDay();
+            var check = await _supplyService.CheckSupplyByWeek();
             if (!check)
             {
                 _logger.LogError("Server Error.");
             }
-            _logger.LogInformation("check campaign job running...");
+            _logger.LogInformation("check supply job running...");
         }
     }
 }

@@ -14,7 +14,6 @@ namespace coffee_kiosk_solution.App_Start
         {
             var mappingConfig = new MapperConfiguration(mc =>
             {
-
                 mc.ConfigAccountModule();
                 mc.ConfigCategoryModule();
                 mc.ConfigProductModule();
@@ -23,6 +22,7 @@ namespace coffee_kiosk_solution.App_Start
                 mc.ConfigDiscountModule();
                 mc.ConfigProductImageModule();
                 mc.ConfigShopModule();
+                mc.ConfigSupplyModule();
                 mc.ConfigOrderModule();
                 mc.ConfigOrderDetailModule();
             });

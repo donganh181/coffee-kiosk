@@ -73,7 +73,7 @@ namespace coffee_kiosk_solution.Controllers
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         [MapToApiVersion("1")]
-        public async Task<IActionResult> DeleteProduct([FromBody] Guid id)
+        public async Task<IActionResult> DeleteImage([FromBody] Guid id)
         {
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);

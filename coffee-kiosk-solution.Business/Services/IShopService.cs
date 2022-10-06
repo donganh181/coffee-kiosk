@@ -15,7 +15,7 @@ namespace coffee_kiosk_solution.Business.Services
         Task<ShopViewModel> ChangeStatus(Guid id);
         Task<ShopViewModel> Delete(Guid id);
         Task<ShopViewModel> ChangeShopManager(Guid shopId, Guid? managerId);
-        Task<DynamicModelResponse<ShopSearchViewModel>> GetAllWithPaging(ShopSearchViewModel model, int size, int pageNum);
-        Task<ShopViewModel> GetById(Guid id);
+        Task<DynamicModelResponse<ShopSearchViewModel>> GetAllWithPaging(ShopSearchViewModel model, int size, int pageNum, string role, Guid managerId);
+        Task<ShopViewModel> GetById(Guid id, string role, Guid managerId);
     }
 }
