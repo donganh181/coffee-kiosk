@@ -20,6 +20,7 @@ namespace coffee_kiosk_solution.Data.Repositories
         ISupplyRepository SupplyRepository { get; }
         IOrderRepository OrderRepository { get; }
         IOrderDetailRepository OrderDetailRepository { get; }
+        IRoleRepository RoleRepository { get; }
         void Save();
         Task SaveAsync();
     }

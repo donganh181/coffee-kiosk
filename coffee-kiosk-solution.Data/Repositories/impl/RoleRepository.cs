@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace coffee_kiosk_solution.Data.Repositories.impl
 {
-    public class ShopRepository : BaseRepository<TblShop>, IShopRepository
+    public class RoleRepository : BaseRepository<TblRole>, IRoleRepository
     {
-        public ShopRepository(Coffee_KioskContext dbContext) : base(dbContext)
+        public RoleRepository(Coffee_KioskContext dbContext) : base(dbContext)
         {
+
         }
     }
 }
