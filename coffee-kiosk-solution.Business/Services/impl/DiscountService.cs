@@ -134,7 +134,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     .FirstOrDefaultAsync();
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _logger.LogError("Invalid data.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
@@ -316,7 +316,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     .FirstOrDefaultAsync();
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _logger.LogError("Invalid data.");
                 throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");

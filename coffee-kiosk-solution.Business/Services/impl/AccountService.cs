@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using coffee_kiosk_solution.Business.Utilities;
+using coffee_kiosk_solution.Data.Constants;
 using coffee_kiosk_solution.Data.Models;
 using coffee_kiosk_solution.Data.Repositories;
 using coffee_kiosk_solution.Data.Responses;
@@ -66,6 +67,64 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
                 }
             }
+
+        }
+
+        public async Task<AccountViewModel> GetById(Guid id, string role, Guid checkId)
+        {
+            var user = await _unitOfWork.AccountRepository
+                .Get(u => u.Id.Equals(id))
+                .ProjectTo<AccountViewModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+            if (user == null)
+            {
+                _logger.LogError("Cannot Found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
+            }
+
+            if (!role.Equals(RoleConstants.ADMIN))
+            {
+                if (!user.Id.Equals(checkId))
+                {
+                    _logger.LogError("You cannot interact with other account.");
+                    throw new ErrorResponse((int)HttpStatusCode.Forbidden, "You cannot interact with other account.");
+                }
+            }
+            return user;
+        }
+
+        public async Task<DynamicModelResponse<AccountSearchViewModel>> GetListAccount(AccountSearchViewModel model, int size, int pageNum)
+        {
+            var listAccount = _unitOfWork.AccountRepository
+                .Get()
+                .Include(a => a.Role)
+                .Include(b => b.Creator)
+                .ProjectTo<AccountSearchViewModel>(_mapper.ConfigurationProvider)
+                .ToList();
+
+            var listPaging = listAccount
+                .AsQueryable()
+                .OrderByDescending(p => p.Username)
+                .DynamicFilter(model)
+                .PagingIQueryable(pageNum, size, CommonConstants.LimitPaging,
+                CommonConstants.DefaultPaging);
+            if (listPaging.Data.ToList().Count < 1)
+            {
+                _logger.LogError("Cannot Found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
+            }
+
+            var result = new DynamicModelResponse<AccountSearchViewModel>
+            {
+                Metadata = new PagingMetaData
+                {
+                    Page = pageNum,
+                    Size = size,
+                    Total = listPaging.Total
+                },
+                Data = listPaging.Data.ToList()
+            };
+            return result;
 
         }
 

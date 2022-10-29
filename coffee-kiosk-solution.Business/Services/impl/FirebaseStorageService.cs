@@ -60,7 +60,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                         string url = await upload;
                         return url;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         _logger.LogInformation("Firebase error.");
                         throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Firebase error.");

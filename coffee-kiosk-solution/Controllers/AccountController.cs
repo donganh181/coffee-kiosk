@@ -1,4 +1,5 @@
 ﻿using coffee_kiosk_solution.Business.Services;
+using coffee_kiosk_solution.Data.Constants;
 using coffee_kiosk_solution.Data.Responses;
 using coffee_kiosk_solution.Data.ViewModels;
 using coffee_kiosk_solution.Utilities;
@@ -45,6 +46,30 @@ namespace coffee_kiosk_solution.Controllers
             var result = await _accountService.Create(creatorId, model);
             _logger.LogInformation($"Created account {result.Username} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<AccountViewModel>((int)HttpStatusCode.OK, "Create success.", result));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [MapToApiVersion("1")]
+        public async Task<IActionResult> GetAllAccountWithPaging([FromQuery] AccountSearchViewModel model, int size, int pageNum = CommonConstants.DefaultPage)
+        {
+            var request = Request;
+            TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
+            var result = await _accountService.GetListAccount(model, size, pageNum);
+            _logger.LogInformation($"Get all account by admin with id {token.Id} ");
+            return Ok(new SuccessResponse<DynamicModelResponse<AccountSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
+        }
+
+        [Authorize(Roles = "Admin, Staff")]
+        [HttpGet("{id}")]
+        [MapToApiVersion("1")]
+        public async Task<IActionResult> GetAccountById(Guid id)
+        {
+            var request = Request;
+            TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
+            var result = await _accountService.GetById(id, token.Role, token.Id);
+            _logger.LogInformation($"Get account by user with id {token.Id} ");
+            return Ok(new SuccessResponse<AccountViewModel>((int)HttpStatusCode.OK, "Get success.", result));
         }
     }
 }

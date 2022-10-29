@@ -17,6 +17,10 @@ namespace coffee_kiosk_solution.Data.AutoMapper
                 .ForMember(src => src.RoleName, opt => opt.MapFrom(des => des.Role.RoleName));
             mc.CreateMap<AccountViewModel, TblAccount>();
 
+            mc.CreateMap<TblAccount, AccountSearchViewModel>()
+               .ForMember(src => src.RoleName, opt => opt.MapFrom(des => des.Role.RoleName));
+            mc.CreateMap<AccountSearchViewModel, TblAccount>();
+
             mc.CreateMap<TblAccount, AccountCreateViewModel>();
             mc.CreateMap<AccountCreateViewModel, TblAccount>();
         }
