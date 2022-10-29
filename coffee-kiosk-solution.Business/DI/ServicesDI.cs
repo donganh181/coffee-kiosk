@@ -52,6 +52,9 @@ namespace coffee_kiosk_solution.Business.DI
 
             services.AddScoped<ISupplyRepository, SupplyRepository>();
             services.AddScoped<ISupplyService, SupplyService>();
+
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IRoleService, RoleService>();
         }
     }
 }

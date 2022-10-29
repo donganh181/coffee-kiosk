@@ -190,6 +190,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             var listDiscount = _unitOfWork.DiscountRepository
                 .Get()
+                .Include(a => a.Product)
+                .Include(b => b.Campaign)
                 .ProjectTo<DiscountSearchViewModel>(_mapper.ConfigurationProvider)
                 .ToList()
                 .AsQueryable();

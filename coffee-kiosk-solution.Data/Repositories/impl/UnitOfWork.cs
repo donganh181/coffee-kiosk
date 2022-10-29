@@ -27,16 +27,20 @@ namespace coffee_kiosk_solution.Data.Repositories.impl
         public IShopRepository ShopRepository { get; set; }
 
         public ISupplyRepository SupplyRepository { get; set; }
+
         public IOrderRepository OrderRepository { get; set; }
 
         public IOrderDetailRepository OrderDetailRepository { get; set; }
+
+        public IRoleRepository RoleRepository { get; set; }
 
         public UnitOfWork(Coffee_KioskContext context, IAccountRepository accountRepository,
             ICategoryRepository categoryRepository, IProductRepository productRepository,
             IAreaRepository areaRepository, ICampaignRepository campaignRepository,
             IDiscountRepository discountRepository, IProductImageRepository productImageRepository,
             IShopRepository shopRepository, ISupplyRepository supplyRepository,
-            IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository)
+            IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository,
+            IRoleRepository roleRepository)
         {
             _context = context;
             AccountRepository = accountRepository;
@@ -50,6 +54,7 @@ namespace coffee_kiosk_solution.Data.Repositories.impl
             OrderRepository = orderRepository;
             OrderDetailRepository = orderDetailRepository;
             SupplyRepository = supplyRepository;
+            RoleRepository = roleRepository;
         }
 
         public void Save()
