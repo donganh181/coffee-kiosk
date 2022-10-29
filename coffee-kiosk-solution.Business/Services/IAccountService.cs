@@ -1,4 +1,5 @@
-﻿using coffee_kiosk_solution.Data.ViewModels;
+﻿using coffee_kiosk_solution.Data.Responses;
+using coffee_kiosk_solution.Data.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace coffee_kiosk_solution.Business.Services
     {
         Task<AccountViewModel> Create (Guid creatorId, AccountCreateViewModel model);
         Task<AccountViewModel> Login(LoginViewModel model);
+        Task<DynamicModelResponse<AccountSearchViewModel>> GetListAccount(AccountSearchViewModel model, int size, int pageNum);
+        Task<AccountViewModel> GetById(Guid id, string role, Guid checkId);
     }
 }
