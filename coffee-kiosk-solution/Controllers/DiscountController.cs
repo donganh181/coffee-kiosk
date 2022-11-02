@@ -44,7 +44,7 @@ namespace coffee_kiosk_solution.Controllers
             var request = Request;
             TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
             var result = await _discountService.Create(model);
-            _logger.LogInformation($"Create discount {result.DiscountPercentage} by admin with id: {token.Id}");
+            _logger.LogInformation($"Create discount {result.DiscountValue} by admin with id: {token.Id}");
             return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Create success.", result));
         }
 

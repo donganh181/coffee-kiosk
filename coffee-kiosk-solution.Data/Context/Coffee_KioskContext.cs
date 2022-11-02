@@ -31,7 +31,6 @@ namespace coffee_kiosk_solution.Data.Context
         public virtual DbSet<TblShop> TblShops { get; set; }
         public virtual DbSet<TblSupply> TblSupplies { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -119,19 +118,21 @@ namespace coffee_kiosk_solution.Data.Context
             {
                 entity.ToTable("tblDiscount");
 
+                entity.HasIndex(e => e.Code, "IX_tblDiscount")
+                    .IsUnique();
+
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Code)
+                    .IsRequired()
+                    .HasMaxLength(16)
+                    .IsFixedLength(true);
 
                 entity.HasOne(d => d.Campaign)
                     .WithMany(p => p.TblDiscounts)
                     .HasForeignKey(d => d.CampaignId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tblDiscount_tblCampaign");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.TblDiscounts)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tblDiscount_tblProduct");
             });
 
             modelBuilder.Entity<TblOrder>(entity =>
@@ -141,6 +142,17 @@ namespace coffee_kiosk_solution.Data.Context
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Discount)
+                    .WithMany(p => p.TblOrders)
+                    .HasForeignKey(d => d.DiscountId)
+                    .HasConstraintName("FK_tblOrder_tblDiscount");
+
+                entity.HasOne(d => d.Shop)
+                    .WithMany(p => p.TblOrders)
+                    .HasForeignKey(d => d.ShopId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_tblOrder_tblShop");
             });
 
             modelBuilder.Entity<TblOrderDetail>(entity =>
@@ -160,12 +172,6 @@ namespace coffee_kiosk_solution.Data.Context
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tblOrderDetail_tblProduct");
-
-                entity.HasOne(d => d.Shop)
-                    .WithMany(p => p.TblOrderDetails)
-                    .HasForeignKey(d => d.ShopId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tblOrderDetail_tblShop");
             });
 
             modelBuilder.Entity<TblProduct>(entity =>

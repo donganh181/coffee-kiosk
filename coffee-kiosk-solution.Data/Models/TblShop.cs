@@ -9,7 +9,7 @@ namespace coffee_kiosk_solution.Data.Models
     {
         public TblShop()
         {
-            TblOrderDetails = new HashSet<TblOrderDetail>();
+            TblOrders = new HashSet<TblOrder>();
             TblSupplies = new HashSet<TblSupply>();
         }
 
@@ -23,7 +23,7 @@ namespace coffee_kiosk_solution.Data.Models
 
         public virtual TblAccount Account { get; set; }
         public virtual TblArea Area { get; set; }
-        public virtual ICollection<TblOrderDetail> TblOrderDetails { get; set; }
+        public virtual ICollection<TblOrder> TblOrders { get; set; }
         public virtual ICollection<TblSupply> TblSupplies { get; set; }
     }
 }

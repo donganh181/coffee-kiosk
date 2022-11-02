@@ -14,7 +14,11 @@ namespace coffee_kiosk_solution.Data.Models
 
         public Guid Id { get; set; }
         public DateTime CreateDate { get; set; }
+        public Guid ShopId { get; set; }
+        public Guid? DiscountId { get; set; }
 
+        public virtual TblDiscount Discount { get; set; }
+        public virtual TblShop Shop { get; set; }
         public virtual ICollection<TblOrderDetail> TblOrderDetails { get; set; }
     }
 }

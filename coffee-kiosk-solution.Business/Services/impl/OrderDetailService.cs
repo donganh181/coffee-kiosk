@@ -47,7 +47,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
                 var result = await _unitOfWork.OrderDetailRepository
                     .Get(p => p.Id.Equals(orderDetail.Id))
-                    .Include(a => a.Shop)
                     .Include(a => a.Order)
                     .ProjectTo<OrderDetailViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
@@ -61,81 +60,12 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
         }
 
-        public async Task<DynamicModelResponse<OrderDetailSearchViewModel>> GetAllByOrderId(Guid orderId, OrderDetailSearchViewModel model, int size, int pageNum)
-        {
-            var listOrderDetail = _unitOfWork.OrderDetailRepository
-                .Get(p => p.OrderId.Equals(orderId))
-                .Include(a => a.Shop)
-                .Include(a => a.Order)
-                .ProjectTo<OrderDetailSearchViewModel>(_mapper.ConfigurationProvider)
-                .ToList();
 
-            var listPaging = listOrderDetail
-                .AsQueryable()
-                .OrderByDescending(p => p.Price)
-                .DynamicFilter(model)
-                .PagingIQueryable(pageNum, size, CommonConstants.LimitPaging,
-                CommonConstants.DefaultPaging);
-
-            if (listPaging.Data.ToList().Count < 1)
-            {
-                _logger.LogError("Cannot Found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
-            }
-
-            var result = new DynamicModelResponse<OrderDetailSearchViewModel>
-            {
-                Metadata = new PagingMetaData
-                {
-                    Page = pageNum,
-                    Size = size,
-                    Total = listPaging.Total
-                },
-                Data = listPaging.Data.ToList()
-            };
-            return result;
-        }
-
-        public async Task<DynamicModelResponse<OrderDetailSearchViewModel>> GetAllByShopId(Guid shopId, OrderDetailSearchViewModel model, int size, int pageNum)
-        {
-            var listOrderDetail = _unitOfWork.OrderDetailRepository
-                .Get(p => p.OrderId.Equals(shopId))
-                .Include(a => a.Shop)
-                .Include(a => a.Order)
-                .ProjectTo<OrderDetailSearchViewModel>(_mapper.ConfigurationProvider)
-                .ToList();
-
-            var listPaging = listOrderDetail
-                .AsQueryable()
-                .OrderByDescending(p => p.OrderId)
-                .DynamicFilter(model)
-                .PagingIQueryable(pageNum, size, CommonConstants.LimitPaging,
-                CommonConstants.DefaultPaging);
-
-            if (listPaging.Data.ToList().Count < 1)
-            {
-                _logger.LogError("Cannot Found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
-            }
-
-            var result = new DynamicModelResponse<OrderDetailSearchViewModel>
-            {
-                Metadata = new PagingMetaData
-                {
-                    Page = pageNum,
-                    Size = size,
-                    Total = listPaging.Total
-                },
-                Data = listPaging.Data.ToList()
-            };
-            return result;
-        }
-
+       
         public async Task<DynamicModelResponse<OrderDetailSearchViewModel>> GetAllWithPaging(OrderDetailSearchViewModel model, int size, int pageNum)
         {
             var listOrderDetail = _unitOfWork.OrderDetailRepository
                 .Get()
-                .Include(a => a.Shop)
                 .Include(a => a.Order)
                 .ProjectTo<OrderDetailSearchViewModel>(_mapper.ConfigurationProvider)
                 .ToList();
@@ -171,7 +101,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
         {
             var orderDetail = await _unitOfWork.OrderDetailRepository
                 .Get(p => p.Id.Equals(id))
-                .Include(a => a.Shop)
                 .Include(a => a.Order)
                 .ProjectTo<OrderDetailViewModel>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();

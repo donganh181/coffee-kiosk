@@ -79,42 +79,5 @@ namespace coffee_kiosk_solution.Controllers
             return Ok(new SuccessResponse<DynamicModelResponse<OrderDetailSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
         }
 
-
-        /// <summary>
-        /// This feature allow user to get all order detail with orderId with paging
-        /// </summary>
-        /// <param name="orderId"></param>
-        /// <param name="model"></param>
-        /// <param name="size"></param>
-        /// <param name="pageNum"></param>
-        /// <returns></returns>
-        [HttpGet("{orderId}")]
-        [MapToApiVersion("1")]
-        public async Task<ActionResult> GetAllOrderDetailsByOrderIdWithPaging([FromQuery] Guid orderId, OrderDetailSearchViewModel model,
-            int size, int pageNum = CommonConstants.DefaultPage)
-        {
-            var result = await _orderDetailService.GetAllByOrderId(orderId, model, size, pageNum);
-            _logger.LogInformation($"Get all order detail ");
-            return Ok(new SuccessResponse<DynamicModelResponse<OrderDetailSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
-        }
-
-        /// <summary>
-        /// This feature allow user to get all order detail with shopId with paging
-        /// </summary>
-        /// <param name="orderId"></param>
-        /// <param name="model"></param>
-        /// <param name="size"></param>
-        /// <param name="pageNum"></param>
-        /// <returns></returns>
-        [HttpGet("{shopId}")]
-        [MapToApiVersion("1")]
-        public async Task<ActionResult> GetAllOrderDetailsByShopIdWithPaging([FromQuery] Guid shopId, OrderDetailSearchViewModel model,
-            int size, int pageNum = CommonConstants.DefaultPage)
-        {
-            var result = await _orderDetailService.GetAllByShopId(shopId, model, size, pageNum);
-            _logger.LogInformation($"Get all order detail ");
-            return Ok(new SuccessResponse<DynamicModelResponse<OrderDetailSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
-        }
-
     }
 }

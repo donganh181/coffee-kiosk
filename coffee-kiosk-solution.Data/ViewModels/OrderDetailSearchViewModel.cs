@@ -20,7 +20,5 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public double Price { get; set; }
         [BindNever]
         public Guid? OrderId { get; set; }
-        [BindNever]
-        public Guid? ShopId { get; set; }
     }
 }

@@ -17,7 +17,5 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public double Price { get; set; }
         [Required]
         public Guid OrderId { get; set; }
-        [Required]
-        public Guid ShopId { get; set; }
     }
 }

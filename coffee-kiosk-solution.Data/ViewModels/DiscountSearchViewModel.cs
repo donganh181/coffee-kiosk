@@ -13,15 +13,13 @@ namespace coffee_kiosk_solution.Data.ViewModels
         [BindNever]
         public Guid? Id { get; set; }
         [BindNever, Skip]
-        public double DiscountPercentage { get; set; }
-        [BindNever]
-        public Guid? ProductId { get; set; }
-        [String]
-        public string ProductName { get; set; }
+        public double DiscountValue { get; set; }
         [BindNever]
         public Guid? CampaignId { get; set; }
-        [String]
-        public string CampaignName { get; set; }
         public int Status { get; set; }
+        [BindNever, Skip]
+        public double RequiredValue { get; set; }
+        [String]
+        public string Code { get; set; }
     }
 }

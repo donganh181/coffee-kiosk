@@ -10,11 +10,13 @@ namespace coffee_kiosk_solution.Data.ViewModels
     public class DiscountCreateViewModel
     {
         [Required]
-        public double DiscountPercentage { get; set; }
-        [Required]
-        public Guid ProductId { get; set; }
+        public double DiscountValue { get; set; }
         [Required]
         public Guid CampaignId { get; set; }
+        [Required]
+        public double RequiredValue { get; set; }
+        [Required]
+        public string Code { get; set; }
 
     }
 }
