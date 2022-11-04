@@ -25,25 +25,39 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IOrderDetailService> _logger;
-        private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly ISupplyService _supplyService;
 
         public OrderDetailService(IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork,
-            ILogger<IOrderDetailService> logger, IOrderDetailRepository orderDetailRepository)
+            ILogger<IOrderDetailService> logger, ISupplyService supplyService)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _orderDetailRepository = orderDetailRepository;
+            _supplyService = supplyService;
         }
 
         public async Task<OrderDetailViewModel> Create(OrderDetailCreateViewModel model)
         {
             var orderDetail = _mapper.Map<TblOrderDetail>(model);
+            var supply = await _supplyService.GetQuantityByShopIdAndProductId(model.ShopId, model.ProductId);
+            
+            if(model.Quantity > supply)
+            {
+                _logger.LogError("Cannot provide enough product.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot provide enough product.");
+            }
             try
             {
                 await _unitOfWork.OrderDetailRepository.InsertAsync(orderDetail);
                 await _unitOfWork.SaveAsync();
+
+                var supplyAfterOrder = await _supplyService.UpdateSupplyAfterOrder(model.ShopId, model.ProductId, model.Quantity);
+                if (!supplyAfterOrder)
+                {
+                    _logger.LogError("Server error.");
+                    throw new ErrorResponse((int)HttpStatusCode.InternalServerError, "Server error.");
+                }
 
                 var result = await _unitOfWork.OrderDetailRepository
                     .Get(p => p.Id.Equals(orderDetail.Id))
@@ -60,8 +74,34 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
         }
 
+        public async Task<bool> Delete(Guid orderId)
+        {
+            var listOrderDetail = await _unitOfWork.OrderDetailRepository
+                .Get(o => o.OrderId.Equals(orderId))
+                .ToListAsync();
+            if(listOrderDetail.Count == 0)
+            {
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found.");
+            }
+            try
+            {
+                foreach(var orderDetail in listOrderDetail)
+                {
+                    _unitOfWork.OrderDetailRepository.Delete(orderDetail);
+                    await _unitOfWork.SaveAsync();
+                    _logger.LogInformation($"Remove order detail id {orderDetail.Id} from order id {orderDetail.OrderId}");
+                }
+                _logger.LogInformation($"Remove all order from order ID {orderId}");
+                return true;
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
+            }
+        }
 
-       
         public async Task<DynamicModelResponse<OrderDetailSearchViewModel>> GetAllWithPaging(OrderDetailSearchViewModel model, int size, int pageNum)
         {
             var listOrderDetail = _unitOfWork.OrderDetailRepository

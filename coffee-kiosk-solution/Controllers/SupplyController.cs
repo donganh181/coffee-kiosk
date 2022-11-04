@@ -151,5 +151,14 @@ namespace coffee_kiosk_solution.Controllers
             _logger.LogInformation($"Get shop {result.Id}");
             return Ok(new SuccessResponse<SupplyViewModel>((int)HttpStatusCode.OK, "Get success.", result));
         }
+
+        [HttpGet("customer")]
+        [MapToApiVersion("1")]
+        public async Task<IActionResult> GetAllSuppliesByCustomerWithPaging(Guid shopId, [FromQuery] SupplyCustomerSearchViewModel model, int size, int pageNum = CommonConstants.DefaultPage)
+        {
+            var result = await _supplyService.GetAllWithPagingByShopId(shopId, model, size, pageNum);
+            _logger.LogInformation($"Get all products ");
+            return Ok(new SuccessResponse<DynamicModelResponse<SupplyCustomerSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
+        }
     }
 }

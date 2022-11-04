@@ -10,6 +10,11 @@ namespace coffee_kiosk_solution.Data.ViewModels
     public class OrderCreateViewModel
     {
         [Required]
-        public DateTime CreateDate { get; set; }
+        public List<OrderSpecificCreateViewModel> ListOrder { get; set; }
+        [Required]
+        public Guid ShopId { get; set; }
+        public Guid? DiscountId { get; set; }
+        [Required]
+        public double TotalPriceBeforeDiscount { get; set; }
     }
 }

@@ -27,6 +27,16 @@ namespace coffee_kiosk_solution.Data.AutoMapper
                 .ForMember(src => src.ListImage, opt => opt.MapFrom(des => des.Product.TblProductImages.ToList()))
                 .ForMember(src => src.ShopName, opt => opt.MapFrom(des => des.Shop.Name));
             mc.CreateMap<SupplySearchViewModel, TblSupply>();
+
+            mc.CreateMap<TblSupply, SupplyCustomerSearchViewModel>()
+                .ForMember(src => src.ProductName, opt => opt.MapFrom(des => des.Product.Name))
+                .ForMember(src => src.ListImage, opt => opt.MapFrom(des => des.Product.TblProductImages.ToList()))
+                .ForMember(src => src.ShopName, opt => opt.MapFrom(des => des.Shop.Name))
+                .ForMember(src => src.CategoryId, opt => opt.MapFrom(des => des.Product.Category.Id))
+                .ForMember(src => src.CategoryName, opt => opt.MapFrom(des => des.Product.Category.Name))
+                .ForMember(src => src.Description, opt => opt.MapFrom(des => des.Product.Description))
+                .ForMember(src => src.Price, opt => opt.MapFrom(des => des.Product.Price));
+            mc.CreateMap<SupplyCustomerSearchViewModel, TblSupply>();
         }
     }
 }

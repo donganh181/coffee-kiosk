@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace coffee_kiosk_solution.Data.ViewModels
 {
-    public class OrderDetailCreateViewModel
+    public class OrderSpecificCreateViewModel
     {
         [Required]
         public Guid ProductId { get; set; }
@@ -15,9 +15,5 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public int Quantity { get; set; }
         [Required]
         public double Price { get; set; }
-        [Required]
-        public Guid OrderId { get; set; }
-        [Required]
-        public Guid ShopId { get; set; }
     }
 }

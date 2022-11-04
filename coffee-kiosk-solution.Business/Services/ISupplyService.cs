@@ -19,5 +19,8 @@ namespace coffee_kiosk_solution.Business.Services
         Task<DynamicModelResponse<SupplySearchViewModel>> GetAllWithPaging(Guid managerId, SupplySearchViewModel model, int size, int pageNum);
         Task<bool> CheckSupplyByWeek();
         Task<SupplyViewModel> GetById(Guid managerId, Guid supplyId);
+        Task<int> GetQuantityByShopIdAndProductId(Guid shopId, Guid productId);
+        Task<bool> UpdateSupplyAfterOrder(Guid shopId, Guid productId, int quantity);
+        Task<DynamicModelResponse<SupplyCustomerSearchViewModel>> GetAllWithPagingByShopId(Guid shopId, SupplyCustomerSearchViewModel model, int size, int pageNum);
     }
 }

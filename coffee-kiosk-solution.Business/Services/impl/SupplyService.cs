@@ -166,6 +166,41 @@ namespace coffee_kiosk_solution.Business.Services.impl
             return result;
         }
 
+        public async Task<DynamicModelResponse<SupplyCustomerSearchViewModel>> GetAllWithPagingByShopId(Guid shopId, SupplyCustomerSearchViewModel model, int size, int pageNum)
+        {
+            var listProduct = _unitOfWork.SupplyRepository
+                .Get(p => p.ShopId.Equals(shopId))
+                .Include(a => a.Shop)
+                .Include(b => b.Product)
+                .ThenInclude(c => c.TblProductImages)
+                .Include(b => b.Product)
+                .ThenInclude(x => x.Category)
+                .ProjectTo<SupplyCustomerSearchViewModel>(_mapper.ConfigurationProvider)
+                .ToList();
+            var listPaging = listProduct
+                .AsQueryable()
+                .OrderByDescending(p => p.ProductName)
+                .DynamicFilter(model)
+                .PagingIQueryable(pageNum, size, CommonConstants.LimitPaging,
+                CommonConstants.DefaultPaging);
+            if (listPaging.Data.ToList().Count < 1)
+            {
+                _logger.LogError("Cannot Found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found");
+            }
+            var result = new DynamicModelResponse<SupplyCustomerSearchViewModel>
+            {
+                Metadata = new PagingMetaData
+                {
+                    Page = pageNum,
+                    Size = size,
+                    Total = listPaging.Total
+                },
+                Data = listPaging.Data.ToList()
+            };
+            return result;
+        }
+
         public async Task<SupplyViewModel> GetById(Guid managerId, Guid supplyId)
         {
             var check = await _unitOfWork.SupplyRepository
@@ -182,7 +217,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             if (!check.Shop.AccountId.Equals(managerId))
             {
                 _logger.LogError("This supply is not belong to this manager.");
-                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "This supply is not belong to this manager.");
+                throw new ErrorResponse((int)HttpStatusCode.Forbidden, "This supply is not belong to this manager.");
             }
             var result = await _unitOfWork.SupplyRepository
                     .Get(s => s.Id.Equals(supplyId))
@@ -192,6 +227,23 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     .ProjectTo<SupplyViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
             return result;
+        }
+
+        public async Task<int> GetQuantityByShopIdAndProductId(Guid shopId, Guid productId)
+        {
+            var supply = await _unitOfWork.SupplyRepository
+                .Get(s => s.ShopId.Equals(shopId) && s.ProductId.Equals(productId))
+                .FirstOrDefaultAsync();
+            if(supply.Status != (int)SupplyStatusConstants.Available)
+            {
+                _logger.LogError("Product is not available.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Product is not available.");
+            }
+            if(supply == null)
+            {
+                return 0;
+            }
+            return supply.SupplyQuantity;
         }
 
         public async Task<SupplyViewModel> ReImport(Guid managerId, Guid supplyId)
@@ -315,6 +367,30 @@ namespace coffee_kiosk_solution.Business.Services.impl
                     .ProjectTo<SupplyViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync();
                 return result;
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
+            }
+        }
+
+        public async Task<bool> UpdateSupplyAfterOrder(Guid shopId, Guid productId, int quantity)
+        {
+            var supply = await _unitOfWork.SupplyRepository
+                .Get(s => s.ShopId.Equals(shopId) && s.ProductId.Equals(productId))
+                .FirstOrDefaultAsync();
+
+            supply.SupplyQuantity = supply.SupplyQuantity - quantity;
+            if(supply.SupplyQuantity == 0)
+            {
+                supply.Status = (int)SupplyStatusConstants.Unavailable;
+            }
+            try
+            {
+                _unitOfWork.SupplyRepository.Update(supply);
+                await _unitOfWork.SaveAsync();
+                return true;
             }
             catch (Exception)
             {

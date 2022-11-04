@@ -16,6 +16,9 @@ namespace coffee_kiosk_solution.Data.AutoMapper
             mc.CreateMap<TblOrderDetail, OrderDetailViewModel>();
             mc.CreateMap<OrderDetailViewModel, TblOrderDetail>();
 
+            mc.CreateMap<OrderDetailViewModel, OrderSpecificCreateViewModel>();
+            mc.CreateMap<OrderSpecificCreateViewModel, OrderDetailViewModel>();
+
             mc.CreateMap<TblOrderDetail, OrderDetailCreateViewModel>();
             mc.CreateMap<OrderDetailCreateViewModel, TblOrderDetail>();
 

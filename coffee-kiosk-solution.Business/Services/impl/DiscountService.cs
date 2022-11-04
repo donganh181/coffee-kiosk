@@ -81,6 +81,21 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
         }
 
+        public async Task<DiscountViewModel> CheckDiscountByShopId(Guid discountId, Guid shopId)
+        {
+            var discount = _unitOfWork.DiscountRepository
+                .Get(d => d.Id.Equals(discountId))
+                .Include(a => a.Campaign)
+                .ThenInclude(b => b.Area)
+                .ThenInclude(c => c.TblShops.Where(s => s.Id.Equals(shopId)))
+                .ToList()
+                .AsQueryable()
+                .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefault();
+
+            return discount;
+        }
+
         public async Task<DiscountViewModel> Create(DiscountCreateViewModel model)
         {
             var discount = _mapper.Map<TblDiscount>(model);
@@ -207,8 +222,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .FirstOrDefaultAsync();
             if (discount == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             if (discount.Status == (int)StatusConstants.Deleted)
