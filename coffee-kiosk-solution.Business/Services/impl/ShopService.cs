@@ -268,6 +268,15 @@ namespace coffee_kiosk_solution.Business.Services.impl
             return result;
         }
 
+        public async Task<Guid> GetAreaIdByShopId(Guid shopId)
+        {
+            var shop = await _unitOfWork.ShopRepository
+                .Get(s => s.Id.Equals(shopId))
+                .FirstOrDefaultAsync();
+
+            return shop.AreaId;
+        }
+
         public async Task<ShopViewModel> GetById(Guid id, string role, Guid managerId)
         {
             var shop = await _unitOfWork.ShopRepository

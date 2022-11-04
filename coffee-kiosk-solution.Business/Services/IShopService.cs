@@ -17,5 +17,6 @@ namespace coffee_kiosk_solution.Business.Services
         Task<ShopViewModel> ChangeShopManager(Guid shopId, Guid? managerId);
         Task<DynamicModelResponse<ShopSearchViewModel>> GetAllWithPaging(ShopSearchViewModel model, int size, int pageNum, string role, Guid managerId);
         Task<ShopViewModel> GetById(Guid id, string role, Guid managerId);
+        Task<Guid> GetAreaIdByShopId(Guid shopId);
     }
 }

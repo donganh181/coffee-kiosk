@@ -129,9 +129,17 @@ namespace coffee_kiosk_solution.Controllers
         public async Task<IActionResult> GetDiscountById(Guid id)
         {
             var result = await _discountService.GetById(id);
-            _logger.LogInformation($"Get product {result.Id}");
+            _logger.LogInformation($"Get discount {result.Id}");
             return Ok(new SuccessResponse<DiscountViewModel>((int)HttpStatusCode.OK, "Get success.", result));
         }
 
+        [HttpGet("listSuitableDiscount")]
+        [MapToApiVersion("1")]
+        public async Task<IActionResult> GetListSuitableDiscount([FromQuery]Guid shopId, [FromQuery]double price)
+        {
+            var result = await _discountService.GetListDiscountByShopIdAndPrice(shopId,price);
+            _logger.LogInformation($"Get list discount");
+            return Ok(new SuccessResponse<List<DiscountViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
+        }
     }
 }

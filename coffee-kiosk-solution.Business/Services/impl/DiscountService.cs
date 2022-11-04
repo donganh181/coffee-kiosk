@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -25,16 +26,18 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IDiscountService> _logger;
         private readonly ICampaignService _campaignService;
+        private readonly IShopService _shopService;
 
         public DiscountService(IMapper mapper, IConfiguration configuration,
             IUnitOfWork unitOfWork, ILogger<IDiscountService> logger,
-            ICampaignService campaignService)
+            ICampaignService campaignService, IShopService shopService)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _campaignService = campaignService;
+            _shopService = shopService;
         }
 
         public async Task<DiscountViewModel> ChangeStatus(Guid id)
@@ -83,17 +86,24 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         public async Task<DiscountViewModel> CheckDiscountByShopId(Guid discountId, Guid shopId)
         {
-            var discount = _unitOfWork.DiscountRepository
+            var discount = await _unitOfWork.DiscountRepository
                 .Get(d => d.Id.Equals(discountId))
                 .Include(a => a.Campaign)
                 .ThenInclude(b => b.Area)
-                .ThenInclude(c => c.TblShops.Where(s => s.Id.Equals(shopId)))
-                .ToList()
-                .AsQueryable()
-                .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
-            return discount;
+            var areaId = await _shopService.GetAreaIdByShopId(shopId);
+            if (!discount.Campaign.AreaId.Equals(areaId))
+            {
+                return null;
+            }
+            var result = await _unitOfWork.DiscountRepository
+               .Get(d => d.Id.Equals(discountId))
+               .Include(a => a.Campaign)
+               .ThenInclude(b => b.Area)
+               .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
+               .FirstOrDefaultAsync();
+            return result;
         }
 
         public async Task<DiscountViewModel> Create(DiscountCreateViewModel model)
@@ -241,6 +251,33 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .ProjectTo<DiscountViewModel>(_mapper.ConfigurationProvider)
                 .ToListAsync();
             return listDiscount;
+        }
+
+        public async Task<List<DiscountViewModel>> GetListDiscountByShopIdAndPrice(Guid shopId, double price)
+        {
+            List<TblDiscount> listResult = new List<TblDiscount>();
+            var listDiscount = await _unitOfWork.DiscountRepository
+                .Get(d => d.RequiredValue <= price)
+                .Include(a => a.Campaign)
+                .ThenInclude(b => b.Area)
+                .ToListAsync();
+
+            var areaId = await _shopService.GetAreaIdByShopId(shopId);
+
+            foreach (var discount in listDiscount)
+            {
+                if (discount.Campaign.AreaId.Equals(areaId))
+                {
+                    listResult.Add(discount);
+                }
+            }
+            if(listResult.Count < 1)
+            {
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
+            }
+            var result = _mapper.Map<List<DiscountViewModel>>(listResult);
+            return result;
         }
 
         public async Task<DiscountViewModel> Update(DiscountUpdateViewModel model)
