@@ -15,5 +15,6 @@ namespace coffee_kiosk_solution.Business.Services
         Task<OrderDetailViewModel> GetById(Guid id);
         Task<DynamicModelResponse<OrderDetailSearchViewModel>> GetAllWithPaging(OrderDetailSearchViewModel model, int size, int pageNum);
         Task<bool> Delete(Guid orderId);
+        Task<List<OrderDetailViewModel>> GetListOrderDetailByOrderId(Guid orderId);
     }
 }

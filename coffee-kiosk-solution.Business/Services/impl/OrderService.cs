@@ -126,11 +126,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 }
                 var result = _unitOfWork.OrderRepository
                     .Get(p => p.Id.Equals(order.Id))
-                    .Include(a => a.TblOrderDetails.Where(x => x.OrderId.Equals(order.Id)))
-                    .ToList()
-                    .AsQueryable()
                     .ProjectTo<OrderViewModel>(_mapper.ConfigurationProvider)
                     .FirstOrDefault();
+
+                result.ListOrderDetail = await _orderDetailService.GetListOrderDetailByOrderId(order.Id);
                 return result;
             }
             catch (Exception)

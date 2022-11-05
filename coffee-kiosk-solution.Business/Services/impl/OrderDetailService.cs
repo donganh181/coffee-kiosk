@@ -154,5 +154,21 @@ namespace coffee_kiosk_solution.Business.Services.impl
             return orderDetail;
 
         }
+
+        public async Task<List<OrderDetailViewModel>> GetListOrderDetailByOrderId(Guid orderId)
+        {
+            var listOrder = await _unitOfWork.OrderDetailRepository
+                .Get(o => o.OrderId.Equals(orderId))
+                .Include(a => a.Product)
+                .ProjectTo<OrderDetailViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            if (listOrder.Count < 1)
+            {
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
+            }
+            return listOrder;
+        }
     }
 }

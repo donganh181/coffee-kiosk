@@ -79,5 +79,13 @@ namespace coffee_kiosk_solution.Controllers
             return Ok(new SuccessResponse<DynamicModelResponse<OrderDetailSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
         }
 
+        [HttpGet("listOrderDetails")]
+        [MapToApiVersion("1")]
+        public async Task<ActionResult> GetListOrderDetailByOrderId(Guid id)
+        {   
+            var result = await _orderDetailService.GetListOrderDetailByOrderId(id);
+            _logger.LogInformation($"Get list order detail by order id {id}");
+            return Ok(new SuccessResponse<List<OrderDetailViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
+        }
     }
 }

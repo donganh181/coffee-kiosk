@@ -13,7 +13,8 @@ namespace coffee_kiosk_solution.Data.AutoMapper
     {
         public static void ConfigOrderDetailModule(this IMapperConfigurationExpression mc)
         {
-            mc.CreateMap<TblOrderDetail, OrderDetailViewModel>();
+            mc.CreateMap<TblOrderDetail, OrderDetailViewModel>()
+                .ForMember(src => src.ProductName, opt => opt.MapFrom(des => des.Product.Name));
             mc.CreateMap<OrderDetailViewModel, TblOrderDetail>();
 
             mc.CreateMap<OrderDetailViewModel, OrderSpecificCreateViewModel>();
