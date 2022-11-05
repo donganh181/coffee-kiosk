@@ -77,5 +77,17 @@ namespace coffee_kiosk_solution.Controllers
             _logger.LogInformation($"Get all products ");
             return Ok(new SuccessResponse<DynamicModelResponse<OrderSearchViewModel>>((int)HttpStatusCode.OK, "Get success.", result));
         }
+
+        [Authorize(Roles = "Staff")]
+        [HttpPatch]
+        [MapToApiVersion("1")]
+        public async Task<IActionResult> ChangeStatusOrder(Guid id, Guid shopId)
+        {
+            var request = Request;
+            TokenViewModel token = HttpContextUtil.getTokenModelFromRequest(request, _configuration);
+            var result = await _orderService.ChangeStatus(id, shopId);
+            _logger.LogInformation($"Change Status order {result.Id} by staff");
+            return Ok(new SuccessResponse<OrderViewModel>((int)HttpStatusCode.OK, "Update success.", result));
+        }
     }
 }

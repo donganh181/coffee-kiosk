@@ -303,6 +303,19 @@ namespace coffee_kiosk_solution.Business.Services.impl
             return shop;
         }
 
+        public async Task<Guid> GetIdByManagerId(Guid managerId)
+        {
+            var shop = await _unitOfWork.ShopRepository
+                .Get(s => s.AccountId.Equals(managerId))
+                .FirstOrDefaultAsync();
+
+            if(shop == null)
+            {
+                return Guid.Empty;
+            }
+            return shop.Id;
+        }
+
         public async Task<ShopViewModel> Update(ShopUpdateViewModel model)
         {
             var shop = await _unitOfWork.ShopRepository

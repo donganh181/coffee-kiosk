@@ -12,5 +12,6 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public Guid RoleId { get; set; }
         public string RoleName { get; set; }
         public string Token { get; set; }
+        public Guid? ShopId { get; set; }
     }
 }

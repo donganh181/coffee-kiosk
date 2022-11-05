@@ -40,6 +40,49 @@ namespace coffee_kiosk_solution.Business.Services.impl
             _discountService = discountService;
         }
 
+        public async Task<OrderViewModel> ChangeStatus(Guid id, Guid shopId)
+        {
+            var order = await _unitOfWork.OrderRepository
+                .Get(o => o.Id.Equals(id))
+                .FirstOrDefaultAsync();
+            if (order == null)
+            {
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
+            }
+            if (!order.ShopId.Equals(shopId))
+            {
+                _logger.LogError("Cannot interact with another order.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Cannot interact with another order.");
+            }
+            if(order.Status == (int)OrderStatusConstants.Completed)
+            {
+                _logger.LogError("Order has been completed.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Order has been completed.");
+            }
+            else
+            {
+                order.Status = (int)OrderStatusConstants.Completed;
+            }
+            try
+            {
+                _unitOfWork.OrderRepository.Update(order);
+                await _unitOfWork.SaveAsync();
+                
+                var result = await _unitOfWork.OrderRepository
+                .Get(o => o.Id.Equals(id))
+                .ProjectTo<OrderViewModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+                return result;
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
+            }
+        }
+
         public async Task<OrderViewModel> Create(OrderCreateViewModel model)
         {
             var order = _mapper.Map<TblOrder>(model);
@@ -144,8 +187,8 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
             if (result == null)
             {
-                _logger.LogError("Can not found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Can not found.");
+                _logger.LogError("Cannot found.");
+                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot found.");
             }
 
             return result;

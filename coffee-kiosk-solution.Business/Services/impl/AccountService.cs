@@ -25,14 +25,16 @@ namespace coffee_kiosk_solution.Business.Services.impl
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<IAccountService> _logger;
+        private readonly IShopService _shopService;
 
         public AccountService(IMapper mapper, IConfiguration configuration,
-            IUnitOfWork unitOfWork, ILogger<IAccountService> logger)
+            IUnitOfWork unitOfWork, ILogger<IAccountService> logger, IShopService shopService)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _shopService = shopService;
         }
 
         public async Task<AccountViewModel> Create(Guid creatorId, AccountCreateViewModel model)
@@ -144,7 +146,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
 
             //check banned or not
-
+            if (user.RoleName.Equals(RoleConstants.STAFF))
+            {
+                user.ShopId = await _shopService.GetIdByManagerId(user.Id);
+            }
             try
             {
                 user.Token = TokenUtil.GenerateJWTWebToken(user, _configuration);
