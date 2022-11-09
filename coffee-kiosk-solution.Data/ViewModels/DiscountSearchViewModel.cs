@@ -19,7 +19,5 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public int Status { get; set; }
         [BindNever, Skip]
         public double RequiredValue { get; set; }
-        [String]
-        public string Code { get; set; }
     }
 }

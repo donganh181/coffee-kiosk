@@ -118,15 +118,7 @@ namespace coffee_kiosk_solution.Data.Context
             {
                 entity.ToTable("tblDiscount");
 
-                entity.HasIndex(e => e.Code, "IX_tblDiscount")
-                    .IsUnique();
-
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Code)
-                    .IsRequired()
-                    .HasMaxLength(16)
-                    .IsFixedLength(true);
 
                 entity.HasOne(d => d.Campaign)
                     .WithMany(p => p.TblDiscounts)
@@ -142,6 +134,8 @@ namespace coffee_kiosk_solution.Data.Context
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.No).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.Discount)
                     .WithMany(p => p.TblOrders)

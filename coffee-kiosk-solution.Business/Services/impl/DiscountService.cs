@@ -307,7 +307,6 @@ namespace coffee_kiosk_solution.Business.Services.impl
             discount.DiscountValue = model.DiscountValue;
             discount.RequiredValue = model.RequiredValue;
             discount.CampaignId = model.CampaignId;
-            discount.Code = model.Code;
             try
             {
                 _unitOfWork.DiscountRepository.Update(discount);
