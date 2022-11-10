@@ -23,8 +23,13 @@ namespace coffee_kiosk_solution.Business.Utilities
                 bool isDateTime = item.PropertyType == typeof(DateTime);
                 if (isDateTime)
                 {
-                    DateTime dt = (DateTime)propertyVal;
-                    source = source.Where($"{item.Name} >= @0 && {item.Name} < @1", dt.Date, dt.Date.AddDays(1));
+                    if ((DateTime)propertyVal == DateTime.Parse("01/01/0001")) continue;
+                    else
+                    {
+                        DateTime dt = (DateTime)propertyVal;
+                        source = source.Where($"{item.Name} >= @0 && {item.Name} < @1", dt.Date, dt.Date.AddDays(1));
+                    }
+                    
                 }
                 else if (item.CustomAttributes.Any(a => a.AttributeType == typeof(ContainAttribute)))
                 {

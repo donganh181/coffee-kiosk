@@ -74,15 +74,14 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
         }
 
-        public async Task<bool> Delete(Guid orderId)
+        public async Task<bool> Delete(Guid orderId, Guid shopId)
         {
             var listOrderDetail = await _unitOfWork.OrderDetailRepository
                 .Get(o => o.OrderId.Equals(orderId))
                 .ToListAsync();
             if(listOrderDetail.Count == 0)
             {
-                _logger.LogError("Cannot found.");
-                throw new ErrorResponse((int)HttpStatusCode.NotFound, "Cannot Found.");
+                return false;
             }
             try
             {
@@ -90,6 +89,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 {
                     _unitOfWork.OrderDetailRepository.Delete(orderDetail);
                     await _unitOfWork.SaveAsync();
+                    await _supplyService.UpdateSupplyAfterCancelOrder(shopId, orderDetail.ProductId, orderDetail.Quantity);
                     _logger.LogInformation($"Remove order detail id {orderDetail.Id} from order id {orderDetail.OrderId}");
                 }
                 _logger.LogInformation($"Remove all order from order ID {orderId}");

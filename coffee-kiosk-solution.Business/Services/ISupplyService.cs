@@ -22,5 +22,6 @@ namespace coffee_kiosk_solution.Business.Services
         Task<int> GetQuantityByShopIdAndProductId(Guid shopId, Guid productId);
         Task<bool> UpdateSupplyAfterOrder(Guid shopId, Guid productId, int quantity);
         Task<DynamicModelResponse<SupplyCustomerSearchViewModel>> GetAllWithPagingByShopId(Guid shopId, SupplyCustomerSearchViewModel model, int size, int pageNum);
+        Task<bool> UpdateSupplyAfterCancelOrder(Guid shopId, Guid productId, int quantity);
     }
 }

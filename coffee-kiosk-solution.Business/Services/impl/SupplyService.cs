@@ -375,6 +375,30 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
         }
 
+        public async Task<bool> UpdateSupplyAfterCancelOrder(Guid shopId, Guid productId, int quantity)
+        {
+            var supply = await _unitOfWork.SupplyRepository
+                .Get(s => s.ShopId.Equals(shopId) && s.ProductId.Equals(productId))
+                .FirstOrDefaultAsync();
+
+            supply.SupplyQuantity = supply.SupplyQuantity + quantity;
+            if (supply.SupplyQuantity == 0)
+            {
+                supply.Status = (int)SupplyStatusConstants.Unavailable;
+            }
+            try
+            {
+                _unitOfWork.SupplyRepository.Update(supply);
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Invalid data.");
+                throw new ErrorResponse((int)HttpStatusCode.BadRequest, "Invalid data.");
+            }
+        }
+
         public async Task<bool> UpdateSupplyAfterOrder(Guid shopId, Guid productId, int quantity)
         {
             var supply = await _unitOfWork.SupplyRepository

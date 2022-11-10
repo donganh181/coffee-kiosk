@@ -13,7 +13,6 @@ namespace coffee_kiosk_solution.Data.ViewModels
     {
         [BindNever]
         public Guid? Id { get; set; }
-        [BindNever, Skip]
         public DateTime CreateDate { get; set; }
         [Guid]
         public Guid? ShopId { get; set; }

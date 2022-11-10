@@ -134,6 +134,7 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
             catch (Exception)
             {
+                await _orderDetailService.Delete(order.Id, order.ShopId);
                 _unitOfWork.OrderRepository.Delete(order);
                 await _unitOfWork.SaveAsync();
                 _logger.LogError("Invalid data.");
