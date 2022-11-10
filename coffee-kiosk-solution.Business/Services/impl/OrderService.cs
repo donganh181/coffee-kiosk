@@ -145,11 +145,21 @@ namespace coffee_kiosk_solution.Business.Services.impl
 
         public async Task<DynamicModelResponse<OrderSearchViewModel>> GetAllWithPaging(OrderSearchViewModel model, int size, int pageNum)
         {
+            double totalPrice = 0;
             var listOrder = _unitOfWork.OrderRepository
                 .Get()
                 .ProjectTo<OrderSearchViewModel>(_mapper.ConfigurationProvider)
                 .ToList()
                 .AsQueryable();
+
+            foreach(var order in listOrder)
+            {
+                totalPrice += order.TotalPrice;
+            }
+            foreach (var order in listOrder)
+            {
+                order.TotalPriceOfAllOrders = totalPrice;
+            }
 
             var listPaging = listOrder
                 .DynamicFilter(model)

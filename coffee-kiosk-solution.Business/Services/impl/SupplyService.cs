@@ -382,9 +382,9 @@ namespace coffee_kiosk_solution.Business.Services.impl
                 .FirstOrDefaultAsync();
 
             supply.SupplyQuantity = supply.SupplyQuantity + quantity;
-            if (supply.SupplyQuantity == 0)
+            if (supply.SupplyQuantity > 0)
             {
-                supply.Status = (int)SupplyStatusConstants.Unavailable;
+                supply.Status = (int)SupplyStatusConstants.Available;
             }
             try
             {
