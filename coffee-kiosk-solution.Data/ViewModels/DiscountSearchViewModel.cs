@@ -16,6 +16,8 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public double DiscountValue { get; set; }
         [BindNever]
         public Guid? CampaignId { get; set; }
+        [Guid]
+        public string CampaignName { get; set; }
         public int Status { get; set; }
         [BindNever, Skip]
         public double RequiredValue { get; set; }
