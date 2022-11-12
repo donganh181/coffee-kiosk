@@ -9,5 +9,6 @@ namespace coffee_kiosk_solution.Data.Repositories
 {
     public interface IOrderRepository : IBaseRepository<TblOrder>
     {
+        Task<bool> UpdateStatus(Guid id);
     }
 }

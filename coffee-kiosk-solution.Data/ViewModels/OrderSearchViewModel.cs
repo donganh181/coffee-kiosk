@@ -16,6 +16,8 @@ namespace coffee_kiosk_solution.Data.ViewModels
         public DateTime CreateDate { get; set; }
         [Guid]
         public Guid? ShopId { get; set; }
+        [String]
+        public string ShopName { get; set; }
         [BindNever,Skip]
         public Guid? DiscountId { get; set; }
         [BindNever,Skip]

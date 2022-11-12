@@ -62,12 +62,10 @@ namespace coffee_kiosk_solution.Business.Services.impl
             }
             else
             {
-                order.Status = (int)OrderStatusConstants.Completed;
+                await _unitOfWork.OrderRepository.UpdateStatus(id);
             }
             try
             {
-                _unitOfWork.OrderRepository.Update(order);
-                await _unitOfWork.SaveAsync();
                 
                 var result = await _unitOfWork.OrderRepository
                 .Get(o => o.Id.Equals(id))
