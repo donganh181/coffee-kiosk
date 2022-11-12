@@ -21,6 +21,8 @@ namespace coffee_kiosk_solution.Data.ViewModels
         [BindNever,Skip]
         public double TotalPrice { get; set; }
         public int Status { get; set; }
+        [BindNever, Skip]
+        public int No { get; set; }
         [BindNever,Skip]
         public double TotalPriceOfAllOrders { get; set; }
     }
